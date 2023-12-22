@@ -45,7 +45,6 @@ function App() {
   };
 
   const handleValidate = () => {
-    // Implementiere die Validierung hier
     console.log('Validierung ausführen...');
   };
 
