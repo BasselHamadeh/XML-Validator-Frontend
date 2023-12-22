@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
-import './App.css';
+import XMLDateiAuswählenButton from './components/XMLDateiAuswählenButton';
+import XMLTextField from './components/XMLTextField';
+import './style.css';
 
 function App() {
   const fileInputRef = useRef(null);
@@ -49,25 +51,18 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="Body">
       <div className="Heading">
         <h1>XML Validator</h1>
       </div>
       <div className="Description">
         <p>Laden Sie XML-Dateien hoch und führen Sie Validierungen durch.</p>
-        <div className="ButtonContainer">
-          <div>
-            <button onClick={handleFileSelect}>Datei auswählen</button>
-          </div>
-          <div>{selectedFileName}</div>
-          {showInsertButton && (
-            <>
-              <button className="InsertButton" onClick={handleInsert}>
-                Einfügen
-              </button>
-            </>
-          )}
-        </div>
+        <XMLDateiAuswählenButton
+          onClick={handleFileSelect}
+          selectedFileName={selectedFileName}
+          showInsertButton={showInsertButton}
+          onInsert={handleInsert}
+        />
         <input
           type="file"
           ref={fileInputRef}
@@ -76,8 +71,7 @@ function App() {
           accept=".xml"
         />
         <div className="InputContainer">
-          <textarea
-            className="InputField"
+          <XMLTextField
             value={inputText}
             onChange={handleTextChange}
             rows={4}
