@@ -99,12 +99,10 @@ const UserPage = () => {
   };
 
   const handleEditClick = (userId) => {
-    // Implementiere die Logik für das Bearbeiten
     console.log(`Edit user with ID ${userId}`);
   };
 
   const handleDeleteClick = (userId) => {
-    // Implementiere die Logik für das Löschen
     console.log(`Delete user with ID ${userId}`);
   };
 
