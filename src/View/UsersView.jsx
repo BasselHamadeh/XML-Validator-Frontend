@@ -136,7 +136,7 @@ const UserPage = () => {
           ),
         }}
       />
-      <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '8px' }}>
+      <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
