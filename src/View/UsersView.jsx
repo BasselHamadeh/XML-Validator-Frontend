@@ -132,7 +132,7 @@ const UserPage = () => {
         style={{ maxWidth: '400px', marginLeft: '8px', marginBottom: '60px' }}
         InputProps={{
           startAdornment: (
-            <SearchIcon sx={{ color: '#04808c' }} />
+            <SearchIcon sx={{ color: '#04809c' }} />
           ),
         }}
       />
