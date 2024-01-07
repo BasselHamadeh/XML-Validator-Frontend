@@ -84,6 +84,7 @@ const UserPage = () => {
   };
 
   const columns = [
+    { field: 'id', headerName: 'ID', width: 100 },
     { field: 'username', headerName: t('xml_validator_view_name'), width: 150 },
     { field: 'email', headerName: t('xml_validator_view_email'), width: 200 },
     { field: 'status', headerName: t('xml_validator_view_role'), width: 150 },
@@ -92,7 +93,14 @@ const UserPage = () => {
     { field: 'verwalten', headerName: t('verwalten'), width: 150 },
   ];
 
-  const filteredUsers = uploadedUsers.filter((user) =>
+  const filteredUsers = [...uploadedUsers].sort((a, b) => {
+    if (a.status === 'Administrator' && b.status !== 'Administrator') return -1;
+    if (a.status !== 'Administrator' && b.status === 'Administrator') return 1;
+    if (a.status === 'Administrator' && b.status === 'Administrator') {
+      return a.username === 'admin' ? -1 : 1;
+    }
+    return 0;
+  }).filter((user) =>
     user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
