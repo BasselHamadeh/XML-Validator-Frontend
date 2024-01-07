@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
 import ButtonAppBar from '../components/ButtonAppBar';
 import Heading from '../components/UserHeading';
 import { styled } from '@mui/material/styles';
@@ -25,7 +24,7 @@ const StyledTableCell = styled(TableCell)(({ theme, isBold }) => ({
     fontWeight: 'bold',
     fontSize: '17.5px',
     border: '2px solid #04809c',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 16.5,
@@ -52,31 +51,9 @@ const UserPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/ressources/benutzerdaten.csv');
-        const reader = response.body.getReader();
-        const result = await reader.read();
-        const text = new TextDecoder().decode(result.value);
-
-        Papa.parse(text, {
-          header: true,
-          complete: (result) => {
-            const rowsWithId = result.data.map((row, index) => ({ id: index + 1, ...row }));
-            const sortedRows = rowsWithId.sort((a, b) => {
-              const aIsAdmin = a.Benutzer === 'Administrator';
-              const bIsAdmin = b.Benutzer === 'Administrator';
-              if (aIsAdmin && !bIsAdmin) return -1;
-              if (!aIsAdmin && bIsAdmin) return 1;
-              if (aIsAdmin && bIsAdmin) {
-                return a.Benutzer === 'Admin' ? -1 : 1;
-              }
-              return 0;
-            });
-            setUploadedUsers(sortedRows);
-          },
-          error: (error) => {
-            console.error('Error parsing data:', error.message);
-          },
-        });
+        const response = await fetch('http://localhost:8080/users');
+        const users = await response.json();
+        setUploadedUsers(users);
       } catch (error) {
         console.error('Error fetching data:', error.message);
       }
@@ -107,16 +84,16 @@ const UserPage = () => {
   };
 
   const columns = [
-    { field: 'test', headerName: t('xml_validator_view_name'), width: 150 },
-    { field: 'test@hotmail.de', headerName: t('xml_validator_view_email'), width: 200 },
-    { field: 'Benutzer', headerName: t('xml_validator_view_role'), width: 150 },
-    { field: 'Mitarbeiter', headerName: t('xml_validator_view_group'), width: 150 },
-    { field: 'Bng8VUVZo9KSVQc4TYlNZSuwl8TneOjuot/ssw+B71qs=', headerName: t('xml_validator_view_password'), width: 200 },
+    { field: 'username', headerName: t('xml_validator_view_name'), width: 150 },
+    { field: 'email', headerName: t('xml_validator_view_email'), width: 200 },
+    { field: 'status', headerName: t('xml_validator_view_role'), width: 150 },
+    { field: 'sicherheitsgruppe', headerName: t('xml_validator_view_group'), width: 150 },
+    { field: 'password', headerName: t('xml_validator_view_password'), width: 200 },
     { field: 'verwalten', headerName: t('verwalten'), width: 150 },
   ];
 
   const filteredUsers = uploadedUsers.filter((user) =>
-    user.test && user.test.toLowerCase().includes(searchTerm.toLowerCase())
+    user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -131,9 +108,7 @@ const UserPage = () => {
         onChange={handleSearchTermChange}
         style={{ maxWidth: '400px', marginLeft: '8px', marginBottom: '60px' }}
         InputProps={{
-          startAdornment: (
-            <SearchIcon sx={{ color: '#04809c' }} />
-          ),
+          startAdornment: <SearchIcon sx={{ color: '#04809c' }} />,
         }}
       />
       <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
@@ -143,7 +118,7 @@ const UserPage = () => {
               {columns.map((column) => (
                 <StyledTableCell
                   key={column.field}
-                  isBold={column.field === 'Benutzer' || column.field === 'Mitarbeiter'}
+                  isBold={column.field === 'status' || column.field === 'sicherheitsgruppe'}
                 >
                   {column.headerName}
                 </StyledTableCell>
@@ -157,14 +132,14 @@ const UserPage = () => {
             ).map((row) => (
               <StyledTableRow
                 key={row.id}
-                isBold={row.Benutzer === 'Administrator' || row.Mitarbeiter === 'Administratoren'}
+                isBold={row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren'}
               >
                 {columns.map((column) => (
                   <StyledTableCell
                     key={column.field}
                     isBold={
-                      (column.field === 'Benutzer' || column.field === 'Mitarbeiter') &&
-                      (row.Benutzer === 'Administrator' || row.Mitarbeiter === 'Administratoren')
+                      (column.field === 'status' || column.field === 'sicherheitsgruppe') &&
+                      (row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren')
                     }
                   >
                     {column.field === 'verwalten' ? (
