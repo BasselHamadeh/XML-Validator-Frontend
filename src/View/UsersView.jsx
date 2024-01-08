@@ -16,20 +16,21 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert';
 
 const StyledTableCell = styled(TableCell)(({ theme, isBold }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#2C2B2E',
+    backgroundColor: '#4D565D',
     color: theme.palette.common.white,
     fontWeight: 'bold',
     fontSize: '17.5px',
-    border: '2px solid #04809c',
+    border: `2px solid #4688BA`,
     textAlign: 'center',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 16.5,
     fontWeight: isBold ? 'bold' : 'normal',
-    border: '2px solid #04809c',
+    border: `2px solid #4688BA`,
     textAlign: 'center',
   },
 }));
@@ -47,15 +48,21 @@ const UserPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
+  const [serverNotStarted, setServerNotStarted] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8080/users');
-        const users = await response.json();
-        setUploadedUsers(users);
+        if (response.ok) {
+          const users = await response.json();
+          setUploadedUsers(users);
+        } else {
+          setServerNotStarted(true);
+        }
       } catch (error) {
         console.error('Error fetching data:', error.message);
+        setServerNotStarted(true);
       }
     };
 
@@ -119,71 +126,84 @@ const UserPage = () => {
           startAdornment: <SearchIcon sx={{ color: '#04809c' }} />,
         }}
       />
-      <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <StyledTableCell
-                  key={column.field}
-                  isBold={column.field === 'status' || column.field === 'sicherheitsgruppe'}
-                >
-                  {column.headerName}
-                </StyledTableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : filteredUsers
-            ).map((row) => (
-              <StyledTableRow
-                key={row.id}
-                isBold={row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren'}
-              >
-                {columns.map((column) => (
-                  <StyledTableCell
-                    key={column.field}
-                    isBold={
-                      (column.field === 'status' || column.field === 'sicherheitsgruppe') &&
-                      (row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren')
-                    }
-                  >
-                    {column.field === 'verwalten' ? (
-                      <div>
-                        <Tooltip title="Edit" arrow>
-                          <EditIcon
-                            style={{ cursor: 'pointer', marginRight: '10px' }}
-                            onClick={() => handleEditClick(row.id)}
-                          />
-                        </Tooltip>
-                        <Tooltip title="Delete" arrow>
-                          <DeleteIcon
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleDeleteClick(row.id)}
-                          />
-                        </Tooltip>
-                      </div>
-                    ) : (
-                      row[column.field]
-                    )}
-                  </StyledTableCell>
-                ))}
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredUsers.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
+      {serverNotStarted && (
+        <Alert severity="error" style={{ margin: '10px', textAlign: 'center', fontSize: '20px', width: '810px', fontFamily: 'Roboto' }}>
+          Oops! It seems the server is not running. Please start the server. Refresh once you're done.
+        </Alert>
+      )}
+      {!serverNotStarted && filteredUsers.length > 0 && (
+        <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
+          {filteredUsers.length === 0 ? null : (
+            <>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <StyledTableCell
+                        key={column.field}
+                        isBold={column.field === 'status' || column.field === 'sicherheitsgruppe'}
+                      >
+                        {column.headerName}
+                      </StyledTableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    : filteredUsers
+                  ).map((row) => (
+                    <StyledTableRow
+                      key={row.id}
+                      isBold={
+                        row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren'
+                      }
+                    >
+                      {columns.map((column) => (
+                        <StyledTableCell
+                          key={column.field}
+                          isBold={
+                            (column.field === 'status' || column.field === 'sicherheitsgruppe') &&
+                            (row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren')
+                          }
+                        >
+                          {column.field === 'verwalten' ? (
+                            <div>
+                              <Tooltip title="Edit" arrow>
+                                <EditIcon
+                                  style={{ cursor: 'pointer', marginRight: '10px' }}
+                                  onClick={() => handleEditClick(row.id)}
+                                />
+                              </Tooltip>
+                              <Tooltip title="Delete" arrow>
+                                <DeleteIcon
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => handleDeleteClick(row.id)}
+                                />
+                              </Tooltip>
+                            </div>
+                          ) : (
+                            row[column.field]
+                          )}
+                        </StyledTableCell>
+                      ))}
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredUsers.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          )}
+        </TableContainer>
+      )}
     </div>
   );
 };
