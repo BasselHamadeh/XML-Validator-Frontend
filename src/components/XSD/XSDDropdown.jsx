@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
 
-function Dropdown() {
+function Dropdown({ onSelectXSD }) {
   const [xsdData, setXsdData] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:8080/xsd')
@@ -13,8 +14,17 @@ function Dropdown() {
       .catch(error => console.error('Error fetching XSD data:', error));
   }, []);
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleChange = async (event) => {
+    const selectedXSD = xsdData.find(xsdFile => xsdFile === event.target.value);
+    setSelectedOption(selectedXSD);
+
+    try {
+      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSD)}`);
+      const xsdContent = response.data.data;
+      onSelectXSD(xsdContent);
+    } catch (error) {
+      console.error('Error fetching XSD content:', error);
+    }
   };
 
   return (
@@ -27,17 +37,16 @@ function Dropdown() {
             marginTop: '10px',
             marginBottom: '20px',
             height: '42px',
-            width: '100%',
+            width: '95%',
             backgroundColor: '#fff',
             color: 'black',
           }}
-          displayEmpty
           inputProps={{ 'aria-label': 'Without label' }}
         >
           {Array.isArray(xsdData) && xsdData.map((xsdFile, index) => (
-            <option key={index} value={xsdFile}>
+            <MenuItem key={index} value={xsdFile}>
               {xsdFile}
-            </option>
+            </MenuItem>
           ))}
         </Select>
       </Grid>

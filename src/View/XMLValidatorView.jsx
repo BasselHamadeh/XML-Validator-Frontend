@@ -81,17 +81,16 @@ function XMLValidatorView() {
       setIsFileAddedByDrop(false);
       return;
     }
-  
+
     const reader = new FileReader();
-  
+
     reader.onload = (event) => {
       const fileContent = event.target.result;
       setInputXSDText(fileContent);
     };
-  
+
     reader.readAsText(xsdFileInputRef.current.files[0]);
   };
-  
 
   const handleTextChangeXML = (e) => {
     setInputXMLText(e.target.value);
@@ -203,7 +202,7 @@ function XMLValidatorView() {
       </Grid>
       <Grid item xs={6}>
         <div className="XMLContainer">
-        <Heading />
+          <Heading />
           <div className="XMLDescription">
             <p style={{ marginLeft: '30px', marginBottom: '30px' }}>{t('xml_validator_view_upload_xml_files')}</p>
             <XMLDateiAuswählenButton
@@ -276,9 +275,9 @@ function XMLValidatorView() {
               accept=".xsd"
             />
             <Grid container spacing={3} alignItems="center">
-              <Grid item xs={10}>
+              <Grid item xs={12}>
                 <div className="Dropdown">
-                  <Dropdown />
+                  <Dropdown onSelectXSD={handleInsertXSD} />
                 </div>
               </Grid>
               <Grid item xs={12}>

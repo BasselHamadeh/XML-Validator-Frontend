@@ -13,9 +13,6 @@ import { useTranslation } from 'react-i18next';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Tooltip from '@mui/material/Tooltip';
 import Alert from '@mui/material/Alert';
 
 const StyledTableCell = styled(TableCell)(({ theme, isBold }) => ({
@@ -53,7 +50,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/users');
+        const response = await fetch('http://localhost:8080/user');
         if (response.ok) {
           const users = await response.json();
           setUploadedUsers(users);
@@ -82,14 +79,6 @@ const UserPage = () => {
     setSearchTerm(event.target.value || '');
   };
 
-  const handleEditClick = (userId) => {
-    console.log(`Edit user with ID ${userId}`);
-  };
-
-  const handleDeleteClick = (userId) => {
-    console.log(`Delete user with ID ${userId}`);
-  };
-
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'username', headerName: t('xml_validator_view_name'), width: 150 },
@@ -97,7 +86,6 @@ const UserPage = () => {
     { field: 'status', headerName: t('xml_validator_view_role'), width: 150 },
     { field: 'sicherheitsgruppe', headerName: t('xml_validator_view_group'), width: 150 },
     { field: 'password', headerName: t('xml_validator_view_password'), width: 200 },
-    { field: 'verwalten', headerName: t('verwalten'), width: 150 },
   ];
 
   const filteredUsers = [...uploadedUsers].sort((a, b) => {
@@ -165,26 +153,8 @@ const UserPage = () => {
                           isBold={
                             (column.field === 'status' || column.field === 'sicherheitsgruppe') &&
                             (row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren')
-                          }
-                        >
-                          {column.field === 'verwalten' ? (
-                            <div>
-                              <Tooltip title="Edit" arrow>
-                                <EditIcon
-                                  style={{ cursor: 'pointer', marginRight: '10px' }}
-                                  onClick={() => handleEditClick(row.id)}
-                                />
-                              </Tooltip>
-                              <Tooltip title="Delete" arrow>
-                                <DeleteIcon
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={() => handleDeleteClick(row.id)}
-                                />
-                              </Tooltip>
-                            </div>
-                          ) : (
-                            row[column.field]
-                          )}
+                          }>
+                          {row[column.field]}
                         </StyledTableCell>
                       ))}
                     </StyledTableRow>
@@ -192,7 +162,7 @@ const UserPage = () => {
                 </TableBody>
               </Table>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[4, 6]}
                 component="div"
                 count={filteredUsers.length}
                 rowsPerPage={rowsPerPage}
