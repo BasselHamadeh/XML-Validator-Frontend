@@ -81,14 +81,14 @@ function XMLValidatorView() {
       setIsFileAddedByDrop(false);
       return;
     }
-
+  
     const reader = new FileReader();
-
+  
     reader.onload = (event) => {
       const fileContent = event.target.result;
       setInputXSDText(fileContent);
     };
-
+  
     reader.readAsText(xsdFileInputRef.current.files[0]);
   };
 
@@ -115,6 +115,10 @@ function XMLValidatorView() {
 
   const handleValidate = () => {
     console.log('Validierung ausführen...');
+  };
+
+  const handleValidateXSD = () => {
+    console.log('Validierung ohne XSD ausführen...');
   };
 
   const handleDragOver = (e) => {
@@ -251,6 +255,14 @@ function XMLValidatorView() {
             >
               <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
             </Button>
+            <Button
+              className="ValidateButton"
+              onClick={handleValidateXSD}
+              variant="contained"
+              style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
+            >
+              <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validatexsd')}
+            </Button>
           </div>
         </div>
       </Grid>
@@ -277,7 +289,7 @@ function XMLValidatorView() {
             <Grid container spacing={3} alignItems="center">
               <Grid item xs={12}>
                 <div className="Dropdown">
-                  <Dropdown onSelectXSD={handleInsertXSD} />
+                <Dropdown onSelectXSD={handleInsertXSD} />
                 </div>
               </Grid>
               <Grid item xs={12}>

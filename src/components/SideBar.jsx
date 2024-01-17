@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import SettingsIcon from '@mui/icons-material/Settings';  // Import the SettingsIcon
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/material/Grid';
@@ -69,6 +70,14 @@ function SideBar({ open, onClose, onThemeChange }) {
       <Divider />
       <Grid container direction="column" justifyContent="flex-end" alignItems="flex-start" sx={{ height: '100%' }}>
         <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary={t('xml_validator_view_setting')} />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton onClick={() => { setIsMenuOpen(true); toggleDrawer({}, true); }}>
               <ListItemIcon>

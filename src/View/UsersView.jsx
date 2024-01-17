@@ -1,43 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import ButtonAppBar from '../components/ButtonAppBar';
 import Heading from '../components/UserHeading';
-import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useTranslation } from 'react-i18next';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Alert from '@mui/material/Alert';
 
-const StyledTableCell = styled(TableCell)(({ theme, isBold }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#4D565D',
-    color: theme.palette.common.white,
-    fontWeight: 'bold',
-    fontSize: '17.5px',
-    border: `2px solid #4688BA`,
-    textAlign: 'center',
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 16.5,
-    fontWeight: isBold ? 'bold' : 'normal',
-    border: `2px solid #4688BA`,
-    textAlign: 'center',
-  },
-}));
+const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
+  return (
+    <TableCell
+      style={{
+        fontWeight: isBold ? 'bold' : 'normal',
+        borderBottom: isHeader ? '2px solid #04809c' : 'none',
+        backgroundColor: isHeader ? 'transparent' : 'transparent',
+        color: isHeader ? 'black' : 'inherit',
+      }}
+      {...other}
+    >
+      {children}
+    </TableCell>
+  );
+};
 
-const StyledTableRow = styled(TableRow)(({ isBold }) => ({
-  fontWeight: isBold ? 'bold' : 'normal',
-  '& > *': {
-    fontWeight: isBold ? 'bold' : 'normal',
-  },
-}));
+const StyledTableRow = ({ children, isBold, ...other }) => {
+  return (
+    <TableRow style={{ fontWeight: isBold ? 'bold' : 'normal' }} {...other}>
+      {children}
+    </TableRow>
+  );
+};
 
 const UserPage = () => {
   const { t } = useTranslation();
@@ -104,14 +103,20 @@ const UserPage = () => {
       <ButtonAppBar />
       <Heading />
       <TextField
-        label="Search Users"
         variant="outlined"
+        placeholder='Search User . . .'
         fullWidth
         margin="normal"
         onChange={handleSearchTermChange}
-        style={{ maxWidth: '400px', marginLeft: '8px', marginBottom: '60px' }}
+        style={{
+          maxWidth: '400px',
+          marginLeft: '8px',
+          marginBottom: '60px',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          borderRadius: '4px'
+        }}
         InputProps={{
-          startAdornment: <SearchIcon sx={{ color: '#04809c' }} />,
+          startAdornment: <SearchIcon sx={{ color: '#04809c' }} />
         }}
       />
       {serverNotStarted && (
@@ -130,8 +135,9 @@ const UserPage = () => {
                       <StyledTableCell
                         key={column.field}
                         isBold={column.field === 'status' || column.field === 'sicherheitsgruppe'}
+                        isHeader
                       >
-                        {column.headerName}
+                        <b>{column.headerName}</b>
                       </StyledTableCell>
                     ))}
                   </TableRow>

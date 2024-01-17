@@ -15,40 +15,40 @@ function Dropdown({ onSelectXSD }) {
   }, []);
 
   const handleChange = async (event) => {
-    const selectedXSD = xsdData.find(xsdFile => xsdFile === event.target.value);
-    setSelectedOption(selectedXSD);
-
+    const selectedXSDFileName = event.target.value;
+    setSelectedOption(selectedXSDFileName);
+  
     try {
-      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSD)}`);
+      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`);
       const xsdContent = response.data.data;
       onSelectXSD(xsdContent);
     } catch (error) {
       console.error('Error fetching XSD content:', error);
     }
-  };
+  };  
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Select
-          value={selectedOption}
-          onChange={handleChange}
-          style={{
-            marginTop: '10px',
-            marginBottom: '20px',
-            height: '42px',
-            width: '95%',
-            backgroundColor: '#fff',
-            color: 'black',
-          }}
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          {Array.isArray(xsdData) && xsdData.map((xsdFile, index) => (
-            <MenuItem key={index} value={xsdFile}>
-              {xsdFile}
-            </MenuItem>
-          ))}
-        </Select>
+      <Select
+  value={selectedOption}
+  onChange={handleChange}
+  style={{
+    marginTop: '10px',
+    marginBottom: '20px',
+    height: '42px',
+    width: '95%',
+    backgroundColor: '#fff',
+    color: 'black',
+  }}
+  inputProps={{ 'aria-label': 'Without label' }}
+>
+  {Array.isArray(xsdData) && xsdData.map((xsdFile, index) => (
+    <MenuItem key={index} value={xsdFile}>
+      {xsdFile}
+    </MenuItem>
+  ))}
+</Select>
       </Grid>
     </Grid>
   );

@@ -83,7 +83,7 @@ function XMLTextInput({ value, onChange, rows }) {
               fontFamily: 'inherit',
               overflowY: 'scroll',
               fontSize: '16px',
-              width: '100%',
+              width: '104%',
               marginLeft: '-130px',
             }}
           />

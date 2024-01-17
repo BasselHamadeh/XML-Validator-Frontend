@@ -34,5 +34,7 @@
   "xml_validator_view_group": "Gruppe",
   "xml_validator_view_password": "Passwort (verschlüsselt)",
   "xml_validator_view_view_user": "Benutzer Dashboard",
-  "xml_validator_view_actions": "verwalten"
+  "xml_validator_view_actions": "verwalten",
+  "xml_validator_view_validatexsd": "Validieren ohne XSD",
+  "xml_validator_view_setting": "Einstellungen"
 }
