@@ -1,3 +1,5 @@
+// frontend/src/pages/UserPage.js
+
 import React, { useState, useEffect } from 'react';
 import ButtonAppBar from '../components/ButtonAppBar';
 import Heading from '../components/UserHeading';
@@ -12,7 +14,20 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
-import Alert from '@mui/material/Alert';
+import ServerNotStartedAlert from '../components/ServerNotStartedAlert';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import EventIcon from '@mui/icons-material/Event';
+import Button from '@mui/material/Button';
 
 const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
   return (
@@ -45,6 +60,9 @@ const UserPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [serverNotStarted, setServerNotStarted] = useState(false);
+  const [loginDetails, setLoginDetails] = useState([]);
+  const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +83,40 @@ const UserPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchLoginDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/login');
+        if (response.ok) {
+          const details = await response.json();
+          setLoginDetails(details);
+        }
+      } catch (error) {
+        console.error('Error fetching login details:', error.message);
+      }
+    };
+
+    fetchLoginDetails();
+  }, []);
+
+  const sortedUsers = [...uploadedUsers].sort((a, b) => {
+    if (a.status === 'Administrator' && b.status !== 'Administrator') {
+      return -1;
+    } else if (a.status !== 'Administrator' && b.status === 'Administrator') {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  const filteredUsers = sortedUsers.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.sicherheitsgruppe.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -78,108 +130,126 @@ const UserPage = () => {
     setSearchTerm(event.target.value || '');
   };
 
-  const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'username', headerName: t('xml_validator_view_name'), width: 150 },
-    { field: 'email', headerName: t('xml_validator_view_email'), width: 200 },
-    { field: 'status', headerName: t('xml_validator_view_role'), width: 150 },
-    { field: 'sicherheitsgruppe', headerName: t('xml_validator_view_group'), width: 150 },
-    { field: 'password', headerName: t('xml_validator_view_password'), width: 200 },
-  ];
-
-  const filteredUsers = [...uploadedUsers].sort((a, b) => {
-    if (a.status === 'Administrator' && b.status !== 'Administrator') return -1;
-    if (a.status !== 'Administrator' && b.status === 'Administrator') return 1;
-    if (a.status === 'Administrator' && b.status === 'Administrator') {
-      return a.username === 'admin' ? -1 : 1;
-    }
-    return 0;
-  }).filter((user) =>
-    user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleLoginDetailsClick = (user) => {
+    setSelectedUser(user);
+    setLoginDetailsDialogOpen(true);
+  };
 
   return (
     <div>
       <ButtonAppBar />
       <Heading />
-      <TextField
-        variant="outlined"
-        placeholder='Search User . . .'
-        fullWidth
-        margin="normal"
-        onChange={handleSearchTermChange}
-        style={{
-          maxWidth: '400px',
-          marginLeft: '8px',
-          marginBottom: '60px',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          borderRadius: '4px'
-        }}
-        InputProps={{
-          startAdornment: <SearchIcon sx={{ color: '#04809c' }} />
-        }}
-      />
-      {serverNotStarted && (
-        <Alert severity="error" style={{ margin: '10px', textAlign: 'center', fontSize: '20px', width: '810px', fontFamily: 'Roboto' }}>
-          Oops! It seems the server is not running. Please start the server. Refresh once you're done.
-        </Alert>
+      {!serverNotStarted && (
+        <TextField
+          variant="outlined"
+          placeholder='Search User . . .'
+          fullWidth
+          margin="normal"
+          onChange={handleSearchTermChange}
+          style={{
+            maxWidth: '400px',
+            marginLeft: '8px',
+            marginBottom: '60px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            borderRadius: '4px'
+          }}
+          InputProps={{
+            startAdornment: <SearchIcon sx={{ color: '#04809c' }} />
+          }}
+        />
       )}
+      {serverNotStarted && <ServerNotStartedAlert />}
       {!serverNotStarted && filteredUsers.length > 0 && (
         <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
-          {filteredUsers.length === 0 ? null : (
-            <>
-              <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <StyledTableCell
-                        key={column.field}
-                        isBold={column.field === 'status' || column.field === 'sicherheitsgruppe'}
-                        isHeader
-                      >
-                        <b>{column.headerName}</b>
-                      </StyledTableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(rowsPerPage > 0
-                    ? filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : filteredUsers
-                  ).map((row) => (
-                    <StyledTableRow
-                      key={row.id}
-                      isBold={
-                        row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren'
-                      }
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell isBold isHeader>ID</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_name')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_email')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_role')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_group')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_password')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>{t('xml_validator_view_login_details')}</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : filteredUsers
+              ).map((row) => (
+                <StyledTableRow key={row.id} isBold={row.status === 'Administrator'}>
+                  <StyledTableCell>{row.id}</StyledTableCell>
+                  <StyledTableCell>{row.username}</StyledTableCell>
+                  <StyledTableCell>{row.email}</StyledTableCell>
+                  <StyledTableCell>
+                    {row.status ? row.status : <span style={{ color: 'red' }}>Keine Daten vorhanden</span>}
+                  </StyledTableCell>
+                  <StyledTableCell>{row.sicherheitsgruppe}</StyledTableCell>
+                  <StyledTableCell>{row.password}</StyledTableCell>
+                  <StyledTableCell>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleLoginDetailsClick(row)}
                     >
-                      {columns.map((column) => (
-                        <StyledTableCell
-                          key={column.field}
-                          isBold={
-                            (column.field === 'status' || column.field === 'sicherheitsgruppe') &&
-                            (row.status === 'Administrator' || row.sicherheitsgruppe === 'Administratoren')
-                          }>
-                          {row[column.field]}
-                        </StyledTableCell>
-                      ))}
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                rowsPerPageOptions={[4, 6]}
-                component="div"
-                count={filteredUsers.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </>
-          )}
+                      <InfoIcon />
+                    </IconButton>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[4, 6]}
+            component="div"
+            count={filteredUsers.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </TableContainer>
       )}
+
+      {/* Login Details Dialog */}
+      <Dialog
+        open={loginDetailsDialogOpen}
+        onClose={() => setLoginDetailsDialogOpen(false)}
+        aria-labelledby="login-details-dialog-title"
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle id="login-details-dialog-title">
+          Login Details for {selectedUser?.username}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {loginDetails
+              .filter((detail) => detail.benutzername === selectedUser?.username)
+              .map((detail, index) => (
+                <div key={index}>
+                  <List>
+                    <ListItem>
+                      <ListItemIcon>
+                        <EventIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={`ID: ${detail.id} - Uhrzeit: ${detail.uhrzeit}`} />
+                    </ListItem>
+                  </List>
+                  <br />
+                </div>
+              ))}
+            {loginDetails.filter((detail) => detail.benutzername === selectedUser?.username).length === 0 && (
+              <div>Keine Login-Daten verfügbar</div>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setLoginDetailsDialogOpen(false)} color="primary">
+            Schließen
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

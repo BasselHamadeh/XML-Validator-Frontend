@@ -36,5 +36,6 @@
   "xml_validator_view_view_user": "Benutzer Dashboard",
   "xml_validator_view_actions": "verwalten",
   "xml_validator_view_validatexsd": "Validieren ohne XSD",
-  "xml_validator_view_setting": "Einstellungen"
+  "xml_validator_view_setting": "Einstellungen",
+  "xml_validator_view_login_details": "Details"
 }
