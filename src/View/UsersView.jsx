@@ -1,5 +1,3 @@
-// frontend/src/pages/UserPage.js
-
 import React, { useState, useEffect } from 'react';
 import ButtonAppBar from '../components/ButtonAppBar';
 import Heading from '../components/UserHeading';
@@ -63,6 +61,7 @@ const UserPage = () => {
   const [loginDetails, setLoginDetails] = useState([]);
   const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [loginTime, setLoginTime] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,6 +96,12 @@ const UserPage = () => {
     };
 
     fetchLoginDetails();
+  }, []);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentTime = currentDate.toLocaleTimeString();
+    setLoginTime(currentTime);
   }, []);
 
   const sortedUsers = [...uploadedUsers].sort((a, b) => {
@@ -225,21 +230,34 @@ const UserPage = () => {
         <DialogContent>
           <DialogContentText>
             {loginDetails
-              .filter((detail) => detail.benutzername === selectedUser?.username)
-              .map((detail, index) => (
+              .filter((detail) => detail.username === selectedUser?.username)
+              .map((detail, index, array) => (
                 <div key={index}>
                   <List>
                     <ListItem>
                       <ListItemIcon>
                         <EventIcon />
                       </ListItemIcon>
-                      <ListItemText primary={`ID: ${detail.id} - Uhrzeit: ${detail.uhrzeit}`} />
+                      <ListItemText
+                        primary={
+                          <span>
+                            email: <strong>{detail.email}</strong> - Uhrzeit: {detail.uhrzeit}
+                          </span>
+                        }
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary={`Tag: ${detail.tag}\nMonat: ${detail.monat}\nJahr: ${detail.jahr}`}
+                      />
                     </ListItem>
                   </List>
-                  <br />
+                  {index < array.length - 1 && (
+                    <div style={{ borderBottom: '2px solid #04809c', margin: '10px 0' }} />
+                  )}
                 </div>
               ))}
-            {loginDetails.filter((detail) => detail.benutzername === selectedUser?.username).length === 0 && (
+            {loginDetails.filter((detail) => detail.username === selectedUser?.username).length === 0 && (
               <div>Keine Login-Daten verfügbar</div>
             )}
           </DialogContentText>
@@ -250,6 +268,12 @@ const UserPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {loginTime && (
+        <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          {`Sitzung von: ${loginTime}`}
+        </div>
+      )}
     </div>
   );
 };
