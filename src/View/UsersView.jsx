@@ -1,31 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import ButtonAppBar from '../components/ButtonAppBar';
-import Heading from '../components/UserHeading';
-import { useTranslation } from 'react-i18next';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Paper from '@mui/material/Paper';
+import SearchIcon from '@mui/icons-material/Search';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
+import Tooltip from '@mui/material/Tooltip';
+import ButtonAppBar from '../components/ButtonAppBar';
 import ServerNotStartedAlert from '../components/ServerNotStartedAlert';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import EventIcon from '@mui/icons-material/Event';
-import Button from '@mui/material/Button';
 
 const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
   return (
@@ -51,8 +50,59 @@ const StyledTableRow = ({ children, isBold, ...other }) => {
   );
 };
 
-const UserPage = () => {
-  const { t } = useTranslation();
+const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
+  return (
+    <Dialog
+      open={true}
+      onClose={onClose}
+      aria-labelledby="login-details-dialog-title"
+      fullWidth
+      maxWidth="md"
+    >
+      <DialogTitle id="login-details-dialog-title">
+        Login Details for {selectedUser?.username}
+      </DialogTitle>
+      <DialogContent>
+        {loginDetails
+          .filter((detail) => detail.username === selectedUser?.username)
+          .map((detail, index, array) => (
+            <div key={index}>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <Avatar>{selectedUser?.username[0]}</Avatar>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <span>
+                        email: <strong>{detail.email}</strong> - Uhrzeit: {detail.uhrzeit}
+                      </span>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={`${detail.tag} / ${detail.monat} / ${detail.jahr}`}
+                  />
+                </ListItem>
+              </List>
+              {index < array.length - 1 && <Divider />}
+            </div>
+          ))}
+        {loginDetails.filter((detail) => detail.username === selectedUser?.username).length === 0 && (
+          <div>Keine Login-Daten verfügbar</div>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Schließen
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const UsersView = () => {
   const [uploadedUsers, setUploadedUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -61,7 +111,6 @@ const UserPage = () => {
   const [loginDetails, setLoginDetails] = useState([]);
   const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [loginTime, setLoginTime] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,12 +145,6 @@ const UserPage = () => {
     };
 
     fetchLoginDetails();
-  }, []);
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const currentTime = currentDate.toLocaleTimeString();
-    setLoginTime(currentTime);
   }, []);
 
   const sortedUsers = [...uploadedUsers].sort((a, b) => {
@@ -143,7 +186,6 @@ const UserPage = () => {
   return (
     <div>
       <ButtonAppBar />
-      <Heading />
       {!serverNotStarted && (
         <TextField
           variant="outlined"
@@ -170,12 +212,12 @@ const UserPage = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell isBold isHeader>ID</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_name')}</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_email')}</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_role')}</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_group')}</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_password')}</StyledTableCell>
-                <StyledTableCell isBold isHeader>{t('xml_validator_view_login_details')}</StyledTableCell>
+                <StyledTableCell isBold isHeader>Name</StyledTableCell>
+                <StyledTableCell isBold isHeader>Email</StyledTableCell>
+                <StyledTableCell isBold isHeader>Role</StyledTableCell>
+                <StyledTableCell isBold isHeader>Group</StyledTableCell>
+                <StyledTableCell isBold isHeader>Password</StyledTableCell>
+                <StyledTableCell isBold isHeader>Login Details</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -193,12 +235,14 @@ const UserPage = () => {
                   <StyledTableCell>{row.sicherheitsgruppe}</StyledTableCell>
                   <StyledTableCell>{row.password}</StyledTableCell>
                   <StyledTableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleLoginDetailsClick(row)}
-                    >
-                      <InfoIcon />
-                    </IconButton>
+                    <Tooltip title="Show Details" arrow>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleLoginDetailsClick(row)}
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    </Tooltip>
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -216,66 +260,15 @@ const UserPage = () => {
         </TableContainer>
       )}
 
-      {/* Login Details Dialog */}
-      <Dialog
-        open={loginDetailsDialogOpen}
-        onClose={() => setLoginDetailsDialogOpen(false)}
-        aria-labelledby="login-details-dialog-title"
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle id="login-details-dialog-title">
-          Login Details for {selectedUser?.username}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {loginDetails
-              .filter((detail) => detail.username === selectedUser?.username)
-              .map((detail, index, array) => (
-                <div key={index}>
-                  <List>
-                    <ListItem>
-                      <ListItemIcon>
-                        <EventIcon />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <span>
-                            email: <strong>{detail.email}</strong> - Uhrzeit: {detail.uhrzeit}
-                          </span>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText
-                        primary={`Tag: ${detail.tag}\nMonat: ${detail.monat}\nJahr: ${detail.jahr}`}
-                      />
-                    </ListItem>
-                  </List>
-                  {index < array.length - 1 && (
-                    <div style={{ borderBottom: '2px solid #04809c', margin: '10px 0' }} />
-                  )}
-                </div>
-              ))}
-            {loginDetails.filter((detail) => detail.username === selectedUser?.username).length === 0 && (
-              <div>Keine Login-Daten verfügbar</div>
-            )}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setLoginDetailsDialogOpen(false)} color="primary">
-            Schließen
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {loginTime && (
-        <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>
-          {`Sitzung von: ${loginTime}`}
-        </div>
+      {loginDetailsDialogOpen && (
+        <UserDetailsDialog
+          loginDetails={loginDetails}
+          selectedUser={selectedUser}
+          onClose={() => setLoginDetailsDialogOpen(false)}
+        />
       )}
     </div>
   );
 };
 
-export default UserPage
+export default UsersView
