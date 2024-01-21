@@ -25,6 +25,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import ButtonAppBar from '../components/ButtonAppBar';
 import ServerNotStartedAlert from '../components/ServerNotStartedAlert';
+import UserHeading from '../components/Heading/UserHeading';
 
 const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
   return (
@@ -64,13 +65,13 @@ const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
       </DialogTitle>
       <DialogContent>
         {loginDetails
-          .filter((detail) => detail.username === selectedUser?.username)
+          .filter((detail) => detail.email === selectedUser?.email)
           .map((detail, index, array) => (
             <div key={index}>
               <List>
                 <ListItem>
                   <ListItemIcon>
-                    <Avatar>{selectedUser?.username[0]}</Avatar>
+                    <Avatar>{selectedUser?.email[0]}</Avatar>
                   </ListItemIcon>
                   <ListItemText
                     primary={
@@ -89,7 +90,7 @@ const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
               {index < array.length - 1 && <Divider />}
             </div>
           ))}
-        {loginDetails.filter((detail) => detail.username === selectedUser?.username).length === 0 && (
+        {loginDetails.filter((detail) => detail.email === selectedUser?.email).length === 0 && (
           <div>Keine Login-Daten verfügbar</div>
         )}
       </DialogContent>
@@ -105,7 +106,7 @@ const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
 const UsersView = () => {
   const [uploadedUsers, setUploadedUsers] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(4); // Default auf 4 gesetzt
   const [searchTerm, setSearchTerm] = useState('');
   const [serverNotStarted, setServerNotStarted] = useState(false);
   const [loginDetails, setLoginDetails] = useState([]);
@@ -186,6 +187,7 @@ const UsersView = () => {
   return (
     <div>
       <ButtonAppBar />
+      <UserHeading />
       {!serverNotStarted && (
         <TextField
           variant="outlined"
@@ -212,10 +214,10 @@ const UsersView = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell isBold isHeader>ID</StyledTableCell>
-                <StyledTableCell isBold isHeader>Name</StyledTableCell>
-                <StyledTableCell isBold isHeader>Email</StyledTableCell>
-                <StyledTableCell isBold isHeader>Role</StyledTableCell>
-                <StyledTableCell isBold isHeader>Group</StyledTableCell>
+                <StyledTableCell isBold isHeader>name</StyledTableCell>
+                <StyledTableCell isBold isHeader>email</StyledTableCell>
+                <StyledTableCell isBold isHeader>role</StyledTableCell>
+                <StyledTableCell isBold isHeader>Team</StyledTableCell>
                 <StyledTableCell isBold isHeader>Password</StyledTableCell>
                 <StyledTableCell isBold isHeader>Login Details</StyledTableCell>
               </TableRow>
@@ -249,7 +251,7 @@ const UsersView = () => {
             </TableBody>
           </Table>
           <TablePagination
-            rowsPerPageOptions={[4, 6]}
+            rowsPerPageOptions={[4, 6, 8, 10]}
             component="div"
             count={filteredUsers.length}
             rowsPerPage={rowsPerPage}
@@ -262,7 +264,7 @@ const UsersView = () => {
 
       {loginDetailsDialogOpen && (
         <UserDetailsDialog
-          loginDetails={loginDetails}
+          loginDetails={loginDetails.filter((detail) => detail.email === selectedUser?.email)}
           selectedUser={selectedUser}
           onClose={() => setLoginDetailsDialogOpen(false)}
         />

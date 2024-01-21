@@ -8,8 +8,8 @@ const Heading = () => {
     <div style={{ textAlign: 'left',
                   color: '#04809c',
                   textIndent: '20px',
-                  marginTop: '-15px',
-                  marginBottom: '-7px' }}>
+                  marginTop: '-4px',
+                  marginBottom: '4px' }}>
       <h1>{t("xml_validator_view_view_user")}</h1>
     </div>
   );

@@ -12,7 +12,7 @@ import XSDDateiAuswählenButton from '../components/XSD/XSDDateiAuswählenButton
 import ButtonAppBar from '../components/ButtonAppBar';
 import Dropdown from '../components/XSD/XSDDropdown';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import Heading from '../components/HomeHeading';
+import Heading from '../components/Heading/HomeHeading';
 import '../style.css';
 
 function XMLValidatorView() {
