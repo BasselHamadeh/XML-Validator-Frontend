@@ -1,112 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
-import SearchIcon from '@mui/icons-material/Search';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
 import ButtonAppBar from '../components/ButtonAppBar';
 import ServerNotStartedAlert from '../components/ServerNotStartedAlert';
 import UserHeading from '../components/Heading/UserHeading';
-
-const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
-  return (
-    <TableCell
-      style={{
-        fontWeight: isBold ? 'bold' : 'normal',
-        borderBottom: isHeader ? '2px solid #04809c' : 'none',
-        backgroundColor: isHeader ? 'transparent' : 'transparent',
-        color: isHeader ? 'black' : 'inherit',
-      }}
-      {...other}
-    >
-      {children}
-    </TableCell>
-  );
-};
-
-const StyledTableRow = ({ children, isBold, ...other }) => {
-  return (
-    <TableRow style={{ fontWeight: isBold ? 'bold' : 'normal' }} {...other}>
-      {children}
-    </TableRow>
-  );
-};
-
-const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
-  return (
-    <Dialog
-      open={true}
-      onClose={onClose}
-      aria-labelledby="login-details-dialog-title"
-      fullWidth
-      maxWidth="md"
-    >
-      <DialogTitle id="login-details-dialog-title">
-        Login Details for {selectedUser?.username}
-      </DialogTitle>
-      <DialogContent>
-        {loginDetails
-          .filter((detail) => detail.email === selectedUser?.email)
-          .map((detail, index, array) => (
-            <div key={index}>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <Avatar>{selectedUser?.email[0]}</Avatar>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      <span>
-                        email: <strong>{detail.email}</strong> - Uhrzeit: {detail.uhrzeit}
-                      </span>
-                    }
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={`${detail.tag} / ${detail.monat} / ${detail.jahr}`}
-                  />
-                </ListItem>
-              </List>
-              {index < array.length - 1 && <Divider />}
-            </div>
-          ))}
-        {loginDetails.filter((detail) => detail.email === selectedUser?.email).length === 0 && (
-          <div>Keine Login-Daten verfügbar</div>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Schließen
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
+import SearchBar from '../components/SearchBar';
+import UserTable from '../components/UserTable';
+import UserDetailsDialog from '../components/UserDetailsDialog';
 
 const UsersView = () => {
   const [uploadedUsers, setUploadedUsers] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(4); // Default auf 4 gesetzt
+  const [rowsPerPage, setRowsPerPage] = useState(4);
   const [searchTerm, setSearchTerm] = useState('');
   const [serverNotStarted, setServerNotStarted] = useState(false);
   const [loginDetails, setLoginDetails] = useState([]);
@@ -158,6 +61,11 @@ const UsersView = () => {
     }
   });
 
+  const handleLoginDetailsClick = (user) => {
+    setSelectedUser(user);
+    setLoginDetailsDialogOpen(true);
+  };
+
   const filteredUsers = sortedUsers.filter(
     (user) =>
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -179,87 +87,21 @@ const UsersView = () => {
     setSearchTerm(event.target.value || '');
   };
 
-  const handleLoginDetailsClick = (user) => {
-    setSelectedUser(user);
-    setLoginDetailsDialogOpen(true);
-  };
-
   return (
     <div>
       <ButtonAppBar />
       <UserHeading />
-      {!serverNotStarted && (
-        <TextField
-          variant="outlined"
-          placeholder='Search User . . .'
-          fullWidth
-          margin="normal"
-          onChange={handleSearchTermChange}
-          style={{
-            maxWidth: '400px',
-            marginLeft: '8px',
-            marginBottom: '60px',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            borderRadius: '4px'
-          }}
-          InputProps={{
-            startAdornment: <SearchIcon sx={{ color: '#04809c' }} />
-          }}
-        />
-      )}
+      {!serverNotStarted && <SearchBar handleSearchTermChange={handleSearchTermChange} />}
       {serverNotStarted && <ServerNotStartedAlert />}
       {!serverNotStarted && filteredUsers.length > 0 && (
-        <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell isBold isHeader>ID</StyledTableCell>
-                <StyledTableCell isBold isHeader>name</StyledTableCell>
-                <StyledTableCell isBold isHeader>email</StyledTableCell>
-                <StyledTableCell isBold isHeader>role</StyledTableCell>
-                <StyledTableCell isBold isHeader>Team</StyledTableCell>
-                <StyledTableCell isBold isHeader>Password</StyledTableCell>
-                <StyledTableCell isBold isHeader>Login Details</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : filteredUsers
-              ).map((row) => (
-                <StyledTableRow key={row.id} isBold={row.status === 'Administrator'}>
-                  <StyledTableCell>{row.id}</StyledTableCell>
-                  <StyledTableCell>{row.username}</StyledTableCell>
-                  <StyledTableCell>{row.email}</StyledTableCell>
-                  <StyledTableCell>
-                    {row.status ? row.status : <span style={{ color: 'red' }}>Keine Daten vorhanden</span>}
-                  </StyledTableCell>
-                  <StyledTableCell>{row.sicherheitsgruppe}</StyledTableCell>
-                  <StyledTableCell>{row.password}</StyledTableCell>
-                  <StyledTableCell>
-                    <Tooltip title="Show Details" arrow>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleLoginDetailsClick(row)}
-                      >
-                        <InfoIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[4, 6, 8, 10]}
-            component="div"
-            count={filteredUsers.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </TableContainer>
+        <UserTable
+          filteredUsers={filteredUsers}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleLoginDetailsClick={handleLoginDetailsClick}
+        />
       )}
 
       {loginDetailsDialogOpen && (
@@ -273,4 +115,4 @@ const UsersView = () => {
   );
 };
 
-export default UsersView
+export default UsersView;

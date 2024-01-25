@@ -16,7 +16,7 @@ i18n
       caches: ['cookie'],
     },
     backend: {
-      loadPath: '/assets/{{lng}}/translation.json',
+      loadPath: '/localization/{{lng}}/translation.json',
     },
   });
 
