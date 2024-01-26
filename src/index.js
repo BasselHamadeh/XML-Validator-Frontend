@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { createRoot } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import XMLValidatorView from './View/XMLValidatorView';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import UserPage from './View/UsersView';
-
 
 const App = () => {
   useEffect(() => {
@@ -32,9 +31,9 @@ const router = createBrowserRouter([
     path: "/user",
     element: <UserPage />,
   },
-])
+]);
 
 const root = document.getElementById('root');
 const rootContainer = createRoot(root);
 rootContainer.render(<App />);
-rootContainer.render(<RouterProvider router={router}/>);
+rootContainer.render(<RouterProvider router={router} />);

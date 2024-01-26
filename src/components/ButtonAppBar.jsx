@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -40,8 +40,13 @@ const themeLight = createTheme({
 const ButtonAppBar = () => {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(localStorage.getItem('selectedTheme') || 'light');
   const [sideBarOpen, setSideBarOpen] = useState(false);
+
+  useEffect(() => {
+    // Setze das Theme beim ersten Rendern
+    setTheme(localStorage.getItem('selectedTheme') || 'light');
+  }, []);
 
   const openDialog = () => {
     setDialogOpen(true);
@@ -53,6 +58,7 @@ const ButtonAppBar = () => {
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme);
+    localStorage.setItem('selectedTheme', selectedTheme);
     closeDialog();
   };
 

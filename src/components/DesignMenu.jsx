@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,8 +8,14 @@ import { useTranslation } from 'react-i18next';
 
 const DesignMenu = ({ onThemeChange }) => {
   const { t } = useTranslation();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTheme, setSelectedTheme] = useState(localStorage.getItem('selectedTheme') || 'light');
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    console.log('Current Theme in DesignMenu:', selectedTheme);
+    onThemeChange(selectedTheme);
+  }, [selectedTheme, onThemeChange]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -17,6 +23,12 @@ const DesignMenu = ({ onThemeChange }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleThemeChange = (theme) => {
+    setSelectedTheme(theme);
+    localStorage.setItem('selectedTheme', theme);
+    handleClose();
   };
 
   return (
@@ -42,11 +54,11 @@ const DesignMenu = ({ onThemeChange }) => {
         }}
         style={{ marginTop: '40px' }}
       >
-        <MenuItem onClick={() => onThemeChange('dark')}>
+        <MenuItem onClick={() => handleThemeChange('dark')}>
           <Brightness4Icon />
           {t('xml_validator_view_dark_theme')}
         </MenuItem>
-        <MenuItem onClick={() => onThemeChange('light')}>
+        <MenuItem onClick={() => handleThemeChange('light')}>
           <Brightness7Icon />
           {t('xml_validator_view_light_theme')}
         </MenuItem>
@@ -55,4 +67,4 @@ const DesignMenu = ({ onThemeChange }) => {
   );
 };
 
-export default DesignMenu;
+export default DesignMenu

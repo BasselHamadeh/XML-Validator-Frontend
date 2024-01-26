@@ -23,6 +23,7 @@ const UsersView = () => {
         if (response.ok) {
           const users = await response.json();
           setUploadedUsers(users);
+          console.log('Received user data from server:', users);
         } else {
           setServerNotStarted(true);
         }

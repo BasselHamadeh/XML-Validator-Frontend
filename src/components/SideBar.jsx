@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import SettingsIcon from '@mui/icons-material/Settings';  // Import the SettingsIcon
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/material/Grid';
@@ -21,6 +21,11 @@ import Grid from '@mui/material/Grid';
 function SideBar({ open, onClose, onThemeChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
+
+  const handleHomeClick = () => {
+    setIsMenuOpen(false);
+    onClose();
+  };
 
   const toggleDrawer = (event, closeMenu = true) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -30,11 +35,6 @@ function SideBar({ open, onClose, onThemeChange }) {
     if (closeMenu) {
       onClose();
     }
-  };
-
-  const handleHomeClick = () => {
-    setIsMenuOpen(false);
-    onClose();
   };
 
   const list = () => (
@@ -95,12 +95,11 @@ function SideBar({ open, onClose, onThemeChange }) {
     <div>
       <Drawer
         anchor="left"
-        open={open || (isMenuOpen)}
+        open={open || isMenuOpen}
         onClose={() => {
           setIsMenuOpen(false);
           onClose();
         }}
-        onOpen={() => setIsMenuOpen(true)}
       >
         {list()}
       </Drawer>

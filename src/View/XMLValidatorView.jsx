@@ -27,7 +27,7 @@ function XMLValidatorView() {
   const { t } = useTranslation();
   const [errorAlertXML, setErrorAlertXML] = useState(null);
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
-  const [isFileAddedByDrop, setIsFileAddedByDrop] = useState(false);
+  const [setIsFileAddedByDrop] = useState(false);
 
   const handleFileSelectXML = () => {
     xmlFileInputRef.current.click();
@@ -76,21 +76,28 @@ function XMLValidatorView() {
     reader.readAsText(xmlFileInputRef.current.files[0]);
   };
 
-  const handleInsertXSD = () => {
-    if (isFileAddedByDrop) {
-      setIsFileAddedByDrop(false);
-      return;
-    }
-  
+  const handleInsertXSD = async () => {
     const reader = new FileReader();
   
-    reader.onload = (event) => {
-      const fileContent = event.target.result;
-      setInputXSDText(fileContent);
+    reader.onload = async (event) => {
+      try {
+        const arrayBuffer = await new Response(xsdFileInputRef.current.files[0]).arrayBuffer();
+        const text = new TextDecoder().decode(arrayBuffer);
+        console.log('XSD Text Content:', text);
+        setInputXSDText(text);
+      } catch (error) {
+        console.error('Error handling XSD file:', error);
+      }
     };
   
-    reader.readAsText(xsdFileInputRef.current.files[0]);
+    try {
+      const arrayBuffer = await new Response(xsdFileInputRef.current.files[0]).arrayBuffer();
+      reader.readAsArrayBuffer(new Blob([arrayBuffer]));
+    } catch (error) {
+      console.error('Error fetching XSD content:', error);
+    }
   };
+  
 
   const handleTextChangeXML = (e) => {
     setInputXMLText(e.target.value);
@@ -289,7 +296,7 @@ function XMLValidatorView() {
             <Grid container spacing={3} alignItems="center">
               <Grid item xs={12}>
                 <div className="Dropdown">
-                <Dropdown onSelectXSD={handleInsertXSD} />
+                  <Dropdown onSelectXSD={handleInsertXSD} />
                 </div>
               </Grid>
               <Grid item xs={12}>
