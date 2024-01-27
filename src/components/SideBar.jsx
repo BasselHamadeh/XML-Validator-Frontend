@@ -2,29 +2,32 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import DesignMenu from './DesignMenu';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SettingsIcon from '@mui/icons-material/Settings';
+import HomeIcon from '@mui/icons-material/Home'; // Placeholder for Home icon
+import PersonIcon from '@mui/icons-material/Person'; // Placeholder for User icon
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import Grid from '@mui/material/Grid';
+import Settings from './Settings';
+import Dialog from '@mui/material/Dialog';
 
 function SideBar({ open, onClose, onThemeChange }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t } = useTranslation();
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   const handleHomeClick = () => {
-    setIsMenuOpen(false);
     onClose();
+  };
+
+  const handleSettingsClick = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
   };
 
   const toggleDrawer = (event, closeMenu = true) => {
@@ -39,7 +42,13 @@ function SideBar({ open, onClose, onThemeChange }) {
 
   const list = () => (
     <Box
-      sx={{ width: 250, display: 'flex', flexDirection: 'column', height: '100%' }}
+      sx={{
+        width: 250,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        textAlign: 'center',
+      }}
       role="presentation"
       onClick={(event) => toggleDrawer(event, false)}
       onKeyDown={(event) => toggleDrawer(event, false)}
@@ -49,45 +58,34 @@ function SideBar({ open, onClose, onThemeChange }) {
       </IconButton>
       <List sx={{ flexGrow: 1 }}>
         <ListItem key="Home" disablePadding>
-          <ListItemButton component={Link} to="/" onClick={() => { handleHomeClick(); setIsMenuOpen(true); toggleDrawer({}, true); }}>
+          <ListItemButton component={Link} to="/" onClick={handleHomeClick}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary={t('xml_validator_view_home')} />
+            <ListItemText primary="Home" />
           </ListItemButton>
         </ListItem>
+        <hr style={{ width: '80%', margin: '10px auto' }} />
         <ListItem key="User" disablePadding>
-          <ListItemButton component={Link} to="/user" onClick={() => { setIsMenuOpen(true); toggleDrawer({}, true); }}>
+          <ListItemButton component={Link} to="/user">
             <ListItemIcon>
-              <ManageAccountsIcon />
+              <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary={t('xml_validator_view_user')} />
+            <ListItemText primary="User" />
           </ListItemButton>
         </ListItem>
-      </List>
-      <Divider />
-      <DesignMenu onThemeChange={onThemeChange} sx={{ alignSelf: 'center', marginY: 'auto' }} />
-      <Divider />
-      <Grid container direction="column" justifyContent="flex-end" alignItems="flex-start" sx={{ height: '100%' }}>
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
+        <hr style={{ width: '80%', margin: '10px auto' }} />
+        <div style={{ marginTop: 'auto' }}>
+          <ListItem key="Settings" disablePadding>
+            <ListItemButton onClick={handleSettingsClick}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
-              <ListItemText primary={t('xml_validator_view_setting')} />
+              <ListItemText primary="Settings" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { setIsMenuOpen(true); toggleDrawer({}, true); }}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('xml_validator_view_logout')} />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Grid>
+        </div>
+      </List>
     </Box>
   );
 
@@ -95,14 +93,17 @@ function SideBar({ open, onClose, onThemeChange }) {
     <div>
       <Drawer
         anchor="left"
-        open={open || isMenuOpen}
+        open={open}
         onClose={() => {
-          setIsMenuOpen(false);
+          setSettingsOpen(false);
           onClose();
         }}
       >
         {list()}
       </Drawer>
+      <Dialog open={isSettingsOpen} onClose={handleSettingsClose} fullWidth maxWidth="sm">
+        <Settings onThemeChange={onThemeChange} />
+      </Dialog>
     </div>
   );
 }

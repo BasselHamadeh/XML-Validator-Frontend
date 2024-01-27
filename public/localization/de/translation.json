@@ -21,8 +21,8 @@
     "xml_validator_view_insert_xsd_file": "XSD-Datei einfügen",
     "xml_validator_view_drag_and_drop_prompt_xml": "Drag and drop an XML file here",
     "xml_validator_view_drag_and_drop_prompt_xsd": "Drag and drop an XSD file here",
-    "xml_validator_view_drag_drop_xml": "Es ist nicht möglich, XSD-Dateien in das XML-Textfeld einzufügen",
-    "xml_validator_view_drag_drop_xsd": "Es ist nicht möglich, XML-Dateien in das XSD-Textfeld einzufügen",
+    "xml_validator_view_drag_drop_xml": "Es ist nur möglich, XML-Dateien in das XML-Textfeld einzufügen",
+    "xml_validator_view_drag_drop_xsd": "Es ist nur möglich, XSD-Dateien in das XSD-Textfeld einzufügen",    
     "xml_validator_view_design": "Designthema",
     "xml_validator_view_home": "Home",
     "xml_validator_view_user": "Benutzer",
@@ -37,5 +37,6 @@
     "xml_validator_view_actions": "verwalten",
     "xml_validator_view_validatexsd": "Validieren ohne XSD",
     "xml_validator_view_setting": "Einstellungen",
-    "xml_validator_view_login_details": "Details"
+    "xml_validator_view_login_details": "Details",
+    "xml_validator_view_language": "Sprache"
   }

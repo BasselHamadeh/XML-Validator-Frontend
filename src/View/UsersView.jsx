@@ -53,9 +53,9 @@ const UsersView = () => {
   }, []);
 
   const sortedUsers = [...uploadedUsers].sort((a, b) => {
-    if (a.status === 'Administrator' && b.status !== 'Administrator') {
+    if (a.username.toLowerCase() === 'admin' && b.username.toLowerCase() !== 'admin') {
       return -1;
-    } else if (a.status !== 'Administrator' && b.status === 'Administrator') {
+    } else if (a.username.toLowerCase() !== 'admin' && b.username.toLowerCase() === 'admin') {
       return 1;
     } else {
       return 0;

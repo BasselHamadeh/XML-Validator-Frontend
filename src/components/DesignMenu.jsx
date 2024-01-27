@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useState, useEffect } from 'react';
+import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useTranslation } from 'react-i18next';
@@ -33,36 +32,39 @@ const DesignMenu = ({ onThemeChange }) => {
 
   return (
     <div>
-      <Button
-        variant="contained"
-        id="design-button"
+      <Typography variant="body1" style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
+        {t('xml_validator_view_design')}
+      </Typography>
+      <div
         aria-controls={open ? 'design-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        style={{ textTransform: 'none', marginLeft: '65px', marginTop: '20px', marginBottom: '20px' }}
+        style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}
       >
-        {t('xml_validator_view_design')}
-      </Button>
-      <Menu
-        id="design-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'design-button',
-        }}
-        style={{ marginTop: '40px' }}
+        <Brightness4Icon />
+        {t('xml_validator_view_dark_theme')}
+        <Switch
+          color="primary"
+          checked={selectedTheme === 'dark'}
+          onChange={() => handleThemeChange(selectedTheme === 'dark' ? 'light' : 'dark')}
+        />
+      </div>
+      <div
+        aria-controls={open ? 'design-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}
       >
-        <MenuItem onClick={() => handleThemeChange('dark')}>
-          <Brightness4Icon />
-          {t('xml_validator_view_dark_theme')}
-        </MenuItem>
-        <MenuItem onClick={() => handleThemeChange('light')}>
-          <Brightness7Icon />
-          {t('xml_validator_view_light_theme')}
-        </MenuItem>
-      </Menu>
+        <Brightness7Icon />
+        {t('xml_validator_view_light_theme')}
+        <Switch
+          color="primary"
+          checked={selectedTheme === 'light'}
+          onChange={() => handleThemeChange(selectedTheme === 'dark' ? 'light' : 'dark')}
+        />
+      </div>
     </div>
   );
 };

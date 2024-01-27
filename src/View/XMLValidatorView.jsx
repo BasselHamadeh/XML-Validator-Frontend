@@ -18,16 +18,16 @@ import '../style.css';
 function XMLValidatorView() {
   const xmlFileInputRef = useRef(null);
   const xsdFileInputRef = useRef(null);
-  const [selectedXMLFileName, setSelectedXMLFileName] = useState('no file selected');
-  const [selectedXSDFileName, setSelectedXSDFileName] = useState('no file selected');
+  const { t } = useTranslation();
+  const [selectedXMLFileName, setSelectedXMLFileName] = useState(t('xml_validator_view_no_file_selected'));
+  const [selectedXSDFileName, setSelectedXSDFileName] = useState(t('xml_validator_view_no_file_selected'));
   const [showInsertXMLButton, setShowInsertXMLButton] = useState(false);
   const [showInsertXSDButton, setShowInsertXSDButton] = useState(false);
   const [inputXMLText, setInputXMLText] = useState('');
   const [inputXSDText, setInputXSDText] = useState('');
-  const { t } = useTranslation();
   const [errorAlertXML, setErrorAlertXML] = useState(null);
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
-  const [setIsFileAddedByDrop] = useState(false);
+  const [isFileAddedByDrop, setIsFileAddedByDrop] = useState(false);
 
   const handleFileSelectXML = () => {
     xmlFileInputRef.current.click();
@@ -43,10 +43,12 @@ function XMLValidatorView() {
     if (selectedFile && selectedFile.name.endsWith('.xml')) {
       setSelectedXMLFileName(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
       setShowInsertXMLButton(true);
+      setIsFileAddedByDrop(false);
       console.log(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
     } else {
       setSelectedXMLFileName(t('no_file_selected'));
       setShowInsertXMLButton(false);
+      setIsFileAddedByDrop(false);
       console.log(t('xml_validator_view_invalid_file'));
     }
   };

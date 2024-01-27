@@ -20,8 +20,8 @@
     "xml_validator_view_insert_xml_file": "Insert XML file",
     "xml_validator_view_insert_xsd_file": "Insert XSD file",
     "xml_validator_view_selected_file_xsd": "Selected {{fileType}} schema file: {{fileName}}",
-    "xml_validator_view_drag_drop_xml": "It is not possible to insert XSD files into the XML text field.",
-    "xml_validator_view_drag_drop_xsd": "It is not possible to insert XML files into the XSD text field.",
+    "xml_validator_view_drag_drop_xml": "Only XML files can be inserted into the XML text field.",
+    "xml_validator_view_drag_drop_xsd": "Only XSD files can be inserted into the XSD text field.",    
     "xml_validator_view_design": "Design Theme",
     "xml_validator_view_home": "Home",
     "xml_validator_view_user": "User",
@@ -36,5 +36,6 @@
     "xml_validator_view_actions": "administer",
     "xml_validator_view_validatexsd": "Validate without XSD",
     "xml_validator_view_setting": "Settings",
-    "xml_validator_view_login_details": "details"
+    "xml_validator_view_login_details": "details",
+    "xml_validator_view_language": "Language"
   }
