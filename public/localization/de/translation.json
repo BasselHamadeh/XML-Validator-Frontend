@@ -38,5 +38,8 @@
     "xml_validator_view_validatexsd": "Validieren ohne XSD",
     "xml_validator_view_setting": "Einstellungen",
     "xml_validator_view_login_details": "Details",
-    "xml_validator_view_language": "Sprache"
+    "xml_validator_view_language": "Sprache",
+    "xml_validator_view_englisch": "Englisch",
+    "xml_validator_view_german": "Deutsch",
+    "xml_validator_view_setting_save": "Einstellungen speichern"
   }

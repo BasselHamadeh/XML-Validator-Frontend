@@ -7,58 +7,38 @@ import { useTranslation } from 'react-i18next';
 
 const DesignMenu = ({ onThemeChange }) => {
   const { t } = useTranslation();
-  const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTheme, setSelectedTheme] = useState(localStorage.getItem('selectedTheme') || 'light');
-  const open = Boolean(anchorEl);
 
   useEffect(() => {
-    console.log('Current Theme in DesignMenu:', selectedTheme);
     onThemeChange(selectedTheme);
   }, [selectedTheme, onThemeChange]);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleThemeChange = (theme) => {
     setSelectedTheme(theme);
     localStorage.setItem('selectedTheme', theme);
-    handleClose();
   };
 
   return (
-    <div>
-      <Typography variant="body1" style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
-        {t('xml_validator_view_design')}
-      </Typography>
-      <div
-        aria-controls={open ? 'design-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}
-      >
-        <Brightness4Icon />
-        {t('xml_validator_view_dark_theme')}
+    <div style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
+      <Typography variant="body1">{t('xml_validator_view_design')}</Typography>
+
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Brightness4Icon style={{ marginRight: '5px' }} />
+        <Typography variant="body1" style={{ marginRight: '10px' }}>
+          {t('xml_validator_view_dark_theme')}
+        </Typography>
         <Switch
           color="primary"
           checked={selectedTheme === 'dark'}
           onChange={() => handleThemeChange(selectedTheme === 'dark' ? 'light' : 'dark')}
         />
       </div>
-      <div
-        aria-controls={open ? 'design-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}
-      >
-        <Brightness7Icon />
-        {t('xml_validator_view_light_theme')}
+
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+        <Brightness7Icon style={{ marginRight: '5px' }} />
+        <Typography variant="body1" style={{ marginRight: '10px' }}>
+          {t('xml_validator_view_light_theme')}
+        </Typography>
         <Switch
           color="primary"
           checked={selectedTheme === 'light'}
