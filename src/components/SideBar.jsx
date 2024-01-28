@@ -9,11 +9,10 @@ import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
-import HomeIcon from '@mui/icons-material/Home'; // Placeholder for Home icon
-import PersonIcon from '@mui/icons-material/Person'; // Placeholder for User icon
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
 import Settings from './Settings';
-import Dialog from '@mui/material/Dialog';
 
 function SideBar({ open, onClose, onThemeChange }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -101,9 +100,14 @@ function SideBar({ open, onClose, onThemeChange }) {
       >
         {list()}
       </Drawer>
-      <Dialog open={isSettingsOpen} onClose={handleSettingsClose} fullWidth maxWidth="sm">
-        <Settings onThemeChange={onThemeChange} />
-      </Dialog>
+
+      {isSettingsOpen && (
+        <Settings
+          open={isSettingsOpen}
+          onClose={handleSettingsClose}
+          onThemeChange={onThemeChange}
+        />
+      )}
     </div>
   );
 }

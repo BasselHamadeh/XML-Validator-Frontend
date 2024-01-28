@@ -2,16 +2,29 @@ import React, { useState, useEffect } from 'react';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import WarningIcon from '@mui/icons-material/Warning';
 import axios from 'axios';
 
 function XSDDropdown({ onSelectXSD }) {
   const [xsdData, setXsdData] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:8080/xsd')
-      .then(response => setXsdData(response.data.data || []))
-      .catch(error => console.error('Error fetching XSD data:', error));
+      .then(response => {
+        setXsdData(response.data.data || []);
+      })
+      .catch(() => {
+        console.error('Error fetching XSD data');
+      });
   }, []);
 
   const handleChange = async (event) => {
@@ -21,6 +34,7 @@ function XSDDropdown({ onSelectXSD }) {
     try {
       if (!selectedXSDFileName || selectedXSDFileName.toLowerCase() === 'no file selected') {
         console.error('No XSD file selected');
+        setServerError(true);
         return;
       }
 
@@ -35,11 +49,16 @@ function XSDDropdown({ onSelectXSD }) {
     }
   };
 
+  const handleDialogClose = () => {
+    setServerError(false);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Select
           value={selectedOption}
+          onClick={() => setServerError(!xsdData.length)}
           onChange={handleChange}
           style={{
             marginTop: '10px',
@@ -58,6 +77,23 @@ function XSDDropdown({ onSelectXSD }) {
           ))}
         </Select>
       </Grid>
+
+      <Dialog open={serverError} onClose={handleDialogClose} maxWidth="xs" fullWidth>
+        <DialogTitle style={{ backgroundColor: '#f44336', color: 'white', textAlign: 'center' }}>
+          <WarningIcon fontSize="large" style={{ marginRight: '8px' }} />
+          <Typography variant="h6">Server Error</Typography>
+        </DialogTitle>
+        <DialogContent style={{ backgroundColor: '#f44336', color: 'white' }}>
+          <DialogContentText style={{ textAlign: 'center', fontWeight: 'bold' }}>
+            The server is not started! Please start the server at http://localhost:8080. Refresh once you're done.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ backgroundColor: '#f44336', padding: '8px', justifyContent: 'center' }}>
+          <Button onClick={handleDialogClose} variant='contained'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }

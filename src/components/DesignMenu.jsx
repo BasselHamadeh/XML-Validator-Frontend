@@ -20,7 +20,9 @@ const DesignMenu = ({ onThemeChange }) => {
 
   return (
     <div style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
-      <Typography variant="body1">{t('xml_validator_view_design')}</Typography>
+      <Typography variant="body1" style={{fontWeight: 'bold', marginBottom: '10px', marginLeft: '-10px',}}>
+        {t('xml_validator_view_design')}
+      </Typography>
 
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Brightness4Icon style={{ marginRight: '5px' }} />
