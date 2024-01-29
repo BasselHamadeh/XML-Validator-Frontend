@@ -61,6 +61,8 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
 
   useEffect(() => {
     setOpen(true);
+
+    document.title = 'XML Validator | Settings';
   }, []);
 
   const handleSaveSettings = () => {

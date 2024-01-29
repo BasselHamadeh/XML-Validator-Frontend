@@ -3,29 +3,44 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import WarningIcon from '@mui/icons-material/Warning';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 
 function XSDDropdown({ onSelectXSD }) {
   const [xsdData, setXsdData] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
-  const [serverError, setServerError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [serverError, setServerError] = useState(null);
+  const [errorMessageShown, setErrorMessageShown] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
+  const [dropdownClicked, setDropdownClicked] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/xsd')
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/xsd');
         setXsdData(response.data.data || []);
-      })
-      .catch(() => {
-        console.error('Error fetching XSD data');
-      });
-  }, []);
+      } catch (error) {
+        console.error('Error fetching XSD data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const timeout = setTimeout(() => {
+      setShowLoading(false);
+      fetchData();
+      if (dropdownClicked) {
+        setErrorMessageShown(true); // Show the error message after loading only if dropdown was clicked
+      }
+    }, 4000);
+
+    return () => clearTimeout(timeout);
+  }, [dropdownClicked]);
 
   const handleChange = async (event) => {
     const selectedXSDFileName = event.target.value;
@@ -33,33 +48,38 @@ function XSDDropdown({ onSelectXSD }) {
 
     try {
       if (!selectedXSDFileName || selectedXSDFileName.toLowerCase() === 'no file selected') {
-        console.error('No XSD file selected');
-        setServerError(true);
-        return;
+        throw new Error('No XSD file selected');
       }
 
-      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`, { responseType: 'blob' });
-      console.log('Response Data:', response.data);
-      console.log('Response Content-Type:', response.headers['content-type']);
+      setLoading(true);
 
+      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`, { responseType: 'blob' });
       const xsdContent = await response.data.text();
       onSelectXSD(xsdContent);
     } catch (error) {
-      console.error('Error fetching XSD content:', error);
+      setServerError(error.message || 'Error fetching XSD content');
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleDropdownClick = () => {
+    setDropdownClicked(true);
+    setShowLoading(true); // Show loading animation on dropdown click
+  };
+
   const handleDialogClose = () => {
-    setServerError(false);
+    setServerError(null);
+    setErrorMessageShown(false);
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12}>
         <Select
           value={selectedOption}
-          onClick={() => setServerError(!xsdData.length)}
           onChange={handleChange}
+          onClick={handleDropdownClick} // Track the dropdown click
           style={{
             marginTop: '10px',
             marginBottom: '20px',
@@ -70,7 +90,8 @@ function XSDDropdown({ onSelectXSD }) {
           }}
           inputProps={{ 'aria-label': 'Without label' }}
         >
-          {Array.isArray(xsdData) && xsdData.map((xsdFile, index) => (
+          {showLoading && <MenuItem disabled><CircularProgress size={20} /></MenuItem>}
+          {!showLoading && xsdData.map((xsdFile, index) => (
             <MenuItem key={index} value={xsdFile.fileName}>
               {xsdFile.fileName}
             </MenuItem>
@@ -78,21 +99,42 @@ function XSDDropdown({ onSelectXSD }) {
         </Select>
       </Grid>
 
-      <Dialog open={serverError} onClose={handleDialogClose} maxWidth="xs" fullWidth>
-        <DialogTitle style={{ backgroundColor: '#f44336', color: 'white', textAlign: 'center' }}>
-          <WarningIcon fontSize="large" style={{ marginRight: '8px' }} />
-          <Typography variant="h6">Server Error</Typography>
-        </DialogTitle>
-        <DialogContent style={{ backgroundColor: '#f44336', color: 'white' }}>
-          <DialogContentText style={{ textAlign: 'center', fontWeight: 'bold' }}>
-            The server is not started! Please start the server at http://localhost:8080. Refresh once you're done.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ backgroundColor: '#f44336', padding: '8px', justifyContent: 'center' }}>
-          <Button onClick={handleDialogClose} variant='contained'>
-            Close
-          </Button>
-        </DialogActions>
+      <Dialog
+        open={!!serverError || (errorMessageShown && !xsdData.length)}
+        onClose={handleDialogClose}
+        fullWidth
+        maxWidth="sm" // Adjusted width
+        PaperProps={{
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '20px',
+            borderRadius: '10px', // Added border radius for a more rounded appearance
+            maxHeight: '200px', // Set a fixed height to prevent scrollbar
+            overflow: 'hidden', // Hide the scrollbar
+          },
+        }}
+      >
+        {(serverError || (errorMessageShown && !xsdData.length)) && (
+          <React.Fragment>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleDialogClose}
+              style={{ position: 'absolute', top: '10px', right: '10px' }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <WarningIcon fontSize="large" style={{ color: '#f44336', marginBottom: '10px' }} />
+            <Typography variant="h6" style={{ color: '#f44336', textAlign: 'center', marginBottom: '10px' }}>
+              Server Error
+            </Typography>
+            <Typography variant="body1" style={{ textAlign: 'center', marginBottom: '20px' }}>
+              {serverError || 'No XSD files available. Please try again later.'}
+            </Typography>
+          </React.Fragment>
+        )}
       </Dialog>
     </Grid>
   );

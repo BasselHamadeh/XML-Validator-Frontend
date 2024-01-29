@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -28,6 +28,10 @@ function XMLValidatorView() {
   const [errorAlertXML, setErrorAlertXML] = useState(null);
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
   const [isFileAddedByDrop, setIsFileAddedByDrop] = useState(false);
+
+  useEffect(() => {
+    document.title = 'XML Validator';
+  }, []);
 
   const handleFileSelectXML = () => {
     xmlFileInputRef.current.click();

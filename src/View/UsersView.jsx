@@ -33,6 +33,8 @@ const UsersView = () => {
       }
     };
 
+    document.title = 'XML Validator | Users';
+
     fetchData();
   }, []);
 
