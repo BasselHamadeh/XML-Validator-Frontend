@@ -13,7 +13,6 @@ import axios from 'axios';
 function XSDDropdown({ onSelectXSD }) {
   const [xsdData, setXsdData] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
-  const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState(null);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
@@ -27,7 +26,7 @@ function XSDDropdown({ onSelectXSD }) {
       } catch (error) {
         console.error('Error fetching XSD data:', error);
       } finally {
-        setLoading(false);
+        // Keine Verwendung der 'loading'-Variable hier
       }
     };
 
@@ -35,7 +34,7 @@ function XSDDropdown({ onSelectXSD }) {
       setShowLoading(false);
       fetchData();
       if (dropdownClicked) {
-        setErrorMessageShown(true); // Show the error message after loading only if dropdown was clicked
+        setErrorMessageShown(true); // Zeige die Fehlermeldung erst nach dem Laden, wenn das Dropdown angeklickt wurde
       }
     }, 4000);
 
@@ -51,7 +50,7 @@ function XSDDropdown({ onSelectXSD }) {
         throw new Error('No XSD file selected');
       }
 
-      setLoading(true);
+      // Keine Verwendung der 'loading'-Variable hier
 
       const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`, { responseType: 'blob' });
       const xsdContent = await response.data.text();
@@ -59,13 +58,13 @@ function XSDDropdown({ onSelectXSD }) {
     } catch (error) {
       setServerError(error.message || 'Error fetching XSD content');
     } finally {
-      setLoading(false);
+      // Keine Verwendung der 'loading'-Variable hier
     }
   };
 
   const handleDropdownClick = () => {
     setDropdownClicked(true);
-    setShowLoading(true); // Show loading animation on dropdown click
+    setShowLoading(true); // Zeige die Ladeanimation beim Klicken auf das Dropdown
   };
 
   const handleDialogClose = () => {
@@ -79,7 +78,7 @@ function XSDDropdown({ onSelectXSD }) {
         <Select
           value={selectedOption}
           onChange={handleChange}
-          onClick={handleDropdownClick} // Track the dropdown click
+          onClick={handleDropdownClick} // Verfolge den Klick auf das Dropdown
           style={{
             marginTop: '10px',
             marginBottom: '20px',
@@ -103,16 +102,16 @@ function XSDDropdown({ onSelectXSD }) {
         open={!!serverError || (errorMessageShown && !xsdData.length)}
         onClose={handleDialogClose}
         fullWidth
-        maxWidth="sm" // Adjusted width
+        maxWidth="sm" // Breite angepasst
         PaperProps={{
           style: {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             padding: '20px',
-            borderRadius: '10px', // Added border radius for a more rounded appearance
-            maxHeight: '200px', // Set a fixed height to prevent scrollbar
-            overflow: 'hidden', // Hide the scrollbar
+            borderRadius: '10px', // Hinzugefügte Eckenradius für ein abgerundeteres Aussehen
+            maxHeight: '200px', // Setze eine feste Höhe, um den Scrollbalken zu verhindern
+            overflow: 'hidden', // Verberge den Scrollbalken
           },
         }}
       >

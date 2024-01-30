@@ -1,50 +1,84 @@
 import React from 'react';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   List,
   ListItem,
-  ListItemIcon,
+  ListItemAvatar,
   Avatar,
   ListItemText,
   Divider,
   DialogActions,
-  Button
+  Button,
+  Typography,
+  Box,
 } from '@mui/material';
 
-const UserDetailsDialogContent = ({ loginDetails, selectedUser, onClose }) => {
+const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
+  const totalLogins = loginDetails.filter((detail) => detail.email === selectedUser?.email).length;
+
   return (
-    <DialogContent>
-      {loginDetails
-        .filter((detail) => detail.email === selectedUser?.email)
-        .map((detail, index, array) => (
-          <div key={index}>
-            <List>
+    <DialogContent
+      sx={{
+        overflowY: totalLogins > 6 ? 'scroll' : 'visible',
+        maxHeight: '400px',
+        position: 'relative'
+      }}
+    >
+      <Box textAlign="center" mb={2}>
+        <ListItem
+          sx={{
+            position: 'sticky',
+            top: '0',
+            background: 'white',
+            zIndex: '1000',
+            borderBottom: '3px solid #04809c'
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar>{selectedUser?.email[0]}</Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6" fontWeight="bold">
+                Login Details für {selectedUser?.username}
+              </Typography>
+            }
+            secondary={
+              <Typography variant="subtitle1">
+                {totalLogins > 0 && (
+                  <>Gesamtanzahl der Logins: {totalLogins} </>
+                )}
+                {totalLogins === 0 && <>Keine Login-Daten verfügbar</>}
+              </Typography>
+            }
+          />
+        </ListItem>
+        <Divider />
+      </Box>
+      <List>
+        {loginDetails
+          .filter((detail) => detail.email === selectedUser?.email)
+          .map((detail, index, array) => (
+            <React.Fragment key={index}>
               <ListItem>
-                <ListItemIcon>
-                  <Avatar>{selectedUser?.email[0]}</Avatar>
-                </ListItemIcon>
                 <ListItemText
                   primary={
-                    <span>
-                      email: <strong>{detail.email}</strong> - Uhrzeit: {detail.uhrzeit}
-                    </span>
+                    <Typography>
+                      email: <strong>{detail.email}</strong>
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography>
+                      Datum: {detail.tag}.{detail.monat}.{detail.jahr} - Uhrzeit: {detail.uhrzeit}
+                    </Typography>
                   }
                 />
               </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary={`${detail.tag} / ${detail.monat} / ${detail.jahr}`}
-                />
-              </ListItem>
-            </List>
-            {index < array.length - 1 && <Divider />}
-          </div>
-        ))}
-      {loginDetails.filter((detail) => detail.email === selectedUser?.email).length === 0 && (
-        <div>Keine Login-Daten verfügbar</div>
-      )}
+              {index < array.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+      </List>
     </DialogContent>
   );
 };
@@ -68,9 +102,6 @@ const UserDetailsDialog = ({ loginDetails, selectedUser, onClose }) => {
       fullWidth
       maxWidth="md"
     >
-      <DialogTitle id="login-details-dialog-title">
-        Login Details for {selectedUser?.username}
-      </DialogTitle>
       <UserDetailsDialogContent
         loginDetails={loginDetails}
         selectedUser={selectedUser}

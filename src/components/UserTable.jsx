@@ -16,7 +16,7 @@ const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
     <TableCell
       style={{
         fontWeight: isBold ? 'bold' : 'normal',
-        borderBottom: isHeader ? '2px solid #04809c' : 'none',
+        borderBottom: isHeader ? '3px solid #04809c' : 'none',
         backgroundColor: isHeader ? 'transparent' : 'transparent',
         color: isHeader ? 'black' : 'inherit',
       }}
@@ -38,7 +38,7 @@ const StyledTableRow = ({ children, isBold, ...other }) => {
 const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, handleLoginDetailsClick }) => {
   return (
     <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+      <Table sx={{ minWidth: 400 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell isBold isHeader>ID</StyledTableCell>
