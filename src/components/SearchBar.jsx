@@ -6,36 +6,37 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-const SearchBar = ({ handleSearchTermChange }) => {
+const SearchBar = ({ handleSearchChange }) => {
   const [searchCategory, setSearchCategory] = useState('username');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleCategoryChange = (event) => {
     setSearchCategory(event.target.value);
-    handleSearchTermChange({ target: { value: '' } });
+    handleSearchChange(searchTerm, event.target.value);
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', marginLeft: '8px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '20px', marginLeft: '8px' }}>
       <TextField
         variant="outlined"
         placeholder={`Search by ${searchCategory === 'username' ? 'Username' : 'Email'}...`}
         fullWidth
         margin="normal"
         onChange={(event) => {
-          if (event.target.value === '' || searchCategory === 'username') {
-            handleSearchTermChange(event);
-          }
+          setSearchTerm(event.target.value);
+          handleSearchChange(event.target.value, searchCategory);
         }}
         style={{
-          flex: 1,
+          width: '40%',
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           transition: 'background-color 0.3s',
         }}
         InputProps={{
           startAdornment: <SearchIcon sx={{ color: '#04809c' }} />,
         }}
+        autoComplete="off"
       />
-      <FormControl sx={{ marginLeft: '10px' }}>
+      <FormControl sx={{ width: '8%', marginTop: '10px' }}>
         <InputLabel id="search-category-label">Search By</InputLabel>
         <Select
           labelId="search-category-label"

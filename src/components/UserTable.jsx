@@ -17,8 +17,9 @@ const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
       style={{
         fontWeight: isBold ? 'bold' : 'normal',
         borderBottom: isHeader ? '3px solid #04809c' : 'none',
-        backgroundColor: isHeader ? 'transparent' : 'transparent',
-        color: isHeader ? 'black' : 'inherit',
+        backgroundColor: isHeader ? '#04809c' : 'transparent',
+        color: isHeader ? 'white' : 'inherit',
+        transition: 'background-color 0.3s ease',
       }}
       {...other}
     >
@@ -29,7 +30,17 @@ const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
 
 const StyledTableRow = ({ children, isBold, ...other }) => {
   return (
-    <TableRow style={{ fontWeight: isBold ? 'bold' : 'normal' }} {...other}>
+    <TableRow
+      style={{
+        fontWeight: isBold ? 'bold' : 'normal',
+        borderRadius: '12px',
+        '&:hover': {
+          backgroundColor: '#f0f0f0',
+        },
+        transition: 'background-color 0.3s ease',
+      }}
+      {...other}
+    >
       {children}
     </TableRow>
   );
@@ -37,7 +48,7 @@ const StyledTableRow = ({ children, isBold, ...other }) => {
 
 const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, handleLoginDetailsClick }) => {
   return (
-    <TableContainer component={Paper} style={{ marginTop: '10px', marginLeft: '7px' }}>
+    <TableContainer component={Paper} elevation={3} style={{ marginTop: '10px', marginLeft: '7px', borderRadius: '8px' }}>
       <Table sx={{ minWidth: 400 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -65,7 +76,7 @@ const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleC
               <StyledTableCell>{row.sicherheitsgruppe}</StyledTableCell>
               <StyledTableCell>{row.password}</StyledTableCell>
               <StyledTableCell>
-                <Tooltip title="Show Details" arrow>
+                <Tooltip title="Show Details" arrow enterTouchDelay={50} leaveTouchDelay={300}>
                   <IconButton
                     color="primary"
                     onClick={() => handleLoginDetailsClick(row)}
@@ -79,6 +90,7 @@ const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleC
         </TableBody>
       </Table>
       <TablePagination
+        style={{ backgroundColor: '#f5f5f5', borderRadius: '0 0 8px 8px' }}
         rowsPerPageOptions={[4, 6, 8, 10]}
         component="div"
         count={filteredUsers.length}

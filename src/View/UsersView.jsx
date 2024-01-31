@@ -11,6 +11,7 @@ const UsersView = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(4);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchCategory, setSearchCategory] = useState('username');
   const [serverNotStarted, setServerNotStarted] = useState(false);
   const [loginDetails, setLoginDetails] = useState([]);
   const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
@@ -23,7 +24,6 @@ const UsersView = () => {
         if (response.ok) {
           const users = await response.json();
           setUploadedUsers(users);
-          console.log('Received user data from server:', users);
         } else {
           setServerNotStarted(true);
         }
@@ -69,13 +69,32 @@ const UsersView = () => {
     setLoginDetailsDialogOpen(true);
   };
 
-  const filteredUsers = sortedUsers.filter(
-    (user) =>
-      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.sicherheitsgruppe.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearchChange = (term, category) => {
+    setSearchTerm(term);
+    setSearchCategory(category);
+  };
+
+  const filteredUsers = sortedUsers.filter((user) => {
+    const lowerCaseTerm = searchTerm.toLowerCase();
+    const lowerCaseUsername = user.username.toLowerCase();
+    const lowerCaseEmail = user.email.toLowerCase();
+    const lowerCaseStatus = user.status.toLowerCase();
+    const lowerCaseGroup = user.sicherheitsgruppe.toLowerCase();
+
+    switch (searchCategory) {
+      case 'username':
+        return lowerCaseUsername.includes(lowerCaseTerm);
+      case 'email':
+        return lowerCaseEmail.includes(lowerCaseTerm);
+      default:
+        return (
+          lowerCaseUsername.includes(lowerCaseTerm) ||
+          lowerCaseEmail.includes(lowerCaseTerm) ||
+          lowerCaseStatus.includes(lowerCaseTerm) ||
+          lowerCaseGroup.includes(lowerCaseTerm)
+        );
+    }
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -86,15 +105,11 @@ const UsersView = () => {
     setPage(0);
   };
 
-  const handleSearchTermChange = (event) => {
-    setSearchTerm(event.target.value || '');
-  };
-
   return (
     <div>
       <ButtonAppBar />
       <UserHeading />
-      {!serverNotStarted && <SearchBar handleSearchTermChange={handleSearchTermChange} />}
+      {!serverNotStarted && <SearchBar handleSearchChange={handleSearchChange} />}
       {serverNotStarted && <ServerNotStartedAlert />}
       {!serverNotStarted && filteredUsers.length > 0 && (
         <UserTable
@@ -118,4 +133,4 @@ const UsersView = () => {
   );
 };
 
-export default UsersView;
+export default UsersView
