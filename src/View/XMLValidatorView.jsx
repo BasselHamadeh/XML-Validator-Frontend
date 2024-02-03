@@ -2,17 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import DeleteIcon from '@mui/icons-material/Delete';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import ErrorAlertXML from '../components/XML/XMLErrorAlert';
 import ErrorAlertXSD from '../components/XSD/XSDErrorAlert';
-import XMLDateiAuswählenButton from '../components/XML/XMLDateiAuswählenButton';
-import XMLTextField from '../components/XML/XMLTextField';
-import XSDTextInput from '../components/XSD/XSDTextfield';
-import XSDDateiAuswählenButton from '../components/XSD/XSDDateiAuswählenButton';
+import XMLContainer from '../components/XML/XMLConatiner';
+import XSDContainer from '../components/XSD/XSDContainer';
 import ButtonAppBar from '../components/ButtonAppBar';
-import Dropdown from '../components/XSD/XSDDropdown';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import Heading from '../components/Heading/HomeHeading';
 import '../style.css';
 
 function XMLValidatorView() {
@@ -27,19 +22,12 @@ function XMLValidatorView() {
   const [inputXSDText, setInputXSDText] = useState('');
   const [errorAlertXML, setErrorAlertXML] = useState(null);
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
-  const [isFileAddedByDrop, setIsFileAddedByDrop] = useState(false);
 
   useEffect(() => {
     document.title = 'XML Validator';
   }, []);
 
-  const handleFileSelectXML = () => {
-    xmlFileInputRef.current.click();
-  };
-
-  const handleFileSelectXSD = () => {
-    xsdFileInputRef.current.click();
-  };
+  const handleFileSelectXML = () => xmlFileInputRef.current.click();
 
   const handleFileChangeXML = (e) => {
     const selectedFile = e.target.files[0];
@@ -47,12 +35,10 @@ function XMLValidatorView() {
     if (selectedFile && selectedFile.name.endsWith('.xml')) {
       setSelectedXMLFileName(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
       setShowInsertXMLButton(true);
-      setIsFileAddedByDrop(false);
       console.log(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
     } else {
       setSelectedXMLFileName(t('no_file_selected'));
       setShowInsertXMLButton(false);
-      setIsFileAddedByDrop(false);
       console.log(t('xml_validator_view_invalid_file'));
     }
   };
@@ -84,7 +70,7 @@ function XMLValidatorView() {
 
   const handleInsertXSD = async () => {
     const reader = new FileReader();
-  
+
     reader.onload = async (event) => {
       try {
         const arrayBuffer = await new Response(xsdFileInputRef.current.files[0]).arrayBuffer();
@@ -95,7 +81,7 @@ function XMLValidatorView() {
         console.error('Error handling XSD file:', error);
       }
     };
-  
+
     try {
       const arrayBuffer = await new Response(xsdFileInputRef.current.files[0]).arrayBuffer();
       reader.readAsArrayBuffer(new Blob([arrayBuffer]));
@@ -103,15 +89,9 @@ function XMLValidatorView() {
       console.error('Error fetching XSD content:', error);
     }
   };
-  
 
-  const handleTextChangeXML = (e) => {
-    setInputXMLText(e.target.value);
-  };
-
-  const handleTextChangeXSD = (e) => {
-    setInputXSDText(e.target.value);
-  };
+  const handleTextChangeXML = (e) => setInputXMLText(e.target.value);
+  const handleTextChangeXSD = (e) => setInputXSDText(e.target.value);
 
   const handleClearXML = () => {
     setInputXMLText('');
@@ -126,22 +106,14 @@ function XMLValidatorView() {
     xsdFileInputRef.current.value = '';
   };
 
-  const handleValidate = () => {
-    console.log('Validierung ausführen...');
-  };
+  const handleValidate = () => console.log('Validierung ausführen...');
+  const handleValidateXSD = () => console.log('Validierung ohne XSD ausführen...');
 
-  const handleValidateXSD = () => {
-    console.log('Validierung ohne XSD ausführen...');
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+  const handleDragOver = (e) => e.preventDefault();
 
   const handleDropXML = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    setIsFileAddedByDrop(true);
     handleDroppedFile(file, 'xml', 'XMLInputContainer');
     setShowInsertXSDButton(false);
   };
@@ -149,7 +121,6 @@ function XMLValidatorView() {
   const handleDropXSD = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    setIsFileAddedByDrop(true);
     handleDroppedFile(file, 'xsd', 'XSDInputContainer');
     setShowInsertXSDButton(false);
   };
@@ -193,9 +164,7 @@ function XMLValidatorView() {
   };
 
   const displayErrorAlertXML = (errorMessage) => {
-    setErrorAlertXML(
-      <ErrorAlertXML message={errorMessage} />
-    );
+    setErrorAlertXML(<ErrorAlertXML message={errorMessage} />);
 
     setTimeout(() => {
       setErrorAlertXML(null);
@@ -203,9 +172,7 @@ function XMLValidatorView() {
   };
 
   const displayErrorAlertXSD = (errorMessage) => {
-    setErrorAlertXSD(
-      <ErrorAlertXSD message={errorMessage} />
-    );
+    setErrorAlertXSD(<ErrorAlertXSD message={errorMessage} />);
 
     setTimeout(() => {
       setErrorAlertXSD(null);
@@ -215,120 +182,58 @@ function XMLValidatorView() {
   return (
     <Grid container spacing={3} className="Body" onDragOver={handleDragOver}>
       <Grid item xs={12}>
-        <ButtonAppBar title="XML Validator View"/>
+        <ButtonAppBar title="XML Validator View" />
       </Grid>
       <Grid item xs={6}>
-        <div className="XMLContainer">
-          <Heading />
-          <div className="XMLDescription">
-            <p style={{ marginLeft: '30px', marginBottom: '30px' }}>{t('xml_validator_view_upload_xml_files')}</p>
-            <XMLDateiAuswählenButton
-              onClick={handleFileSelectXML}
-              selectedFileName={selectedXMLFileName}
-              showInsertButton={showInsertXMLButton}
-              onInsert={handleInsertXML}
-            >
-              {t('xml_validator_view_select_file')}
-            </XMLDateiAuswählenButton>
-            <input
-              type="file"
-              ref={xmlFileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChangeXML}
-              accept=".xml"
-            />
-            <Grid container spacing={3} alignItems="center">
-              <Grid item xs={12}>
-                <div className="XMLInputContainer" onDrop={handleDropXML}>
-                  <XMLTextField value={inputXMLText} onChange={handleTextChangeXML} rows={4} />
-                </div>
-                <div className="XMLErrorAlertContainer">
-                  {errorAlertXML}
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div className="XMLButtonGrid">
-                  <Button
-                    className="XMLClearButton"
-                    onClick={handleClearXML}
-                    variant="outlined"
-                    startIcon={<DeleteIcon />}
-                    style={{ textTransform: 'none', marginLeft: '30px', marginTop: '10px' }}
-                  >
-                    {t('xml_validator_view_clear_files')}
-                  </Button>
-                </div>
-              </Grid>
-            </Grid>
-            <Button
-              className="ValidateButton"
-              onClick={handleValidate}
-              variant="contained"
-              style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
-            >
-              <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
-            </Button>
-            <Button
-              className="ValidateButton"
-              onClick={handleValidateXSD}
-              variant="contained"
-              style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
-            >
-              <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validatexsd')}
-            </Button>
-          </div>
-        </div>
+        <XMLContainer
+          onFileSelect={handleFileSelectXML}
+          selectedFileName={selectedXMLFileName}
+          showInsertButton={showInsertXMLButton}
+          onInsert={handleInsertXML}
+          onFileChange={handleFileChangeXML}
+          inputXMLText={inputXMLText}
+          onTextChange={handleTextChangeXML}
+          onClear={handleClearXML}
+          onDragOver={handleDragOver}
+          onDrop={handleDropXML}
+          errorAlertXML={errorAlertXML}
+          setInputXMLText={setInputXMLText}
+          setSelectedXMLFileName={setSelectedXMLFileName}
+          setShowInsertXMLButton={setShowInsertXMLButton}
+        />
+        <Button
+          className="ValidateButton"
+          onClick={handleValidate}
+          variant="contained"
+          style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
+        >
+          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
+        </Button>
+        <Button
+          className="ValidateButton"
+          onClick={handleValidateXSD}
+          variant="contained"
+          style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
+        >
+          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validatexsd')}
+        </Button>
       </Grid>
 
       <Grid item xs={6}>
-        <div className="XSDContainer">
-          <div className="XSDDescription">
-            <p style={{ marginBottom: '30px' }}>{t('xml_validator_view_upload_xsd_files')}</p>
-            <XSDDateiAuswählenButton
-              onClick={handleFileSelectXSD}
-              selectedFileName={selectedXSDFileName}
-              showInsertButton={showInsertXSDButton}
-              onInsert={handleInsertXSD}
-            >
-              {t('xml_validator_view_select_file')}
-            </XSDDateiAuswählenButton>
-            <input
-              type="file"
-              ref={xsdFileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChangeXSD}
-              accept=".xsd"
-            />
-            <Grid container spacing={3} alignItems="center">
-              <Grid item xs={12}>
-                <div className="Dropdown">
-                  <Dropdown onSelectXSD={handleInsertXSD} />
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div className="XSDInputContainer" onDrop={handleDropXSD}>
-                  <XSDTextInput value={inputXSDText} onChange={handleTextChangeXSD} rows={4} disabled={inputXSDText.length > 50} />
-                </div>
-                <div className="XSDErrorAlertContainer">
-                  {errorAlertXSD}
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div className="XSDButtonGrid">
-                  <Button
-                    className="XSDClearButton"
-                    onClick={handleClearXSD}
-                    variant="outlined"
-                    startIcon={<DeleteIcon />}
-                    style={{ textTransform: 'none' }}
-                  >
-                    {t('xml_validator_view_clear_files')}
-                  </Button>
-                </div>
-              </Grid>
-            </Grid>
-          </div>
-        </div>
+        <XSDContainer
+          selectedFileName={selectedXSDFileName}
+          showInsertButton={showInsertXSDButton}
+          onInsert={handleInsertXSD}
+          onFileChange={handleFileChangeXSD}
+          inputXSDText={inputXSDText}
+          onTextChange={handleTextChangeXSD}
+          onClear={handleClearXSD}
+          onDrop={handleDropXSD}
+          errorAlertXSD={errorAlertXSD}
+          setInputXSDText={setInputXSDText}
+          setSelectedXSDFileName={setSelectedXSDFileName}
+          setShowInsertXSDButton={setShowInsertXSDButton}
+        />
       </Grid>
     </Grid>
   );

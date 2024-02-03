@@ -4,7 +4,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Select from '@mui/material/Select';
@@ -16,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     width: '80vw',
     maxWidth: '700px',
@@ -39,10 +39,6 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(0.5, 0),
-}));
-
 const StyledDivider = styled(Divider)(({ theme }) => ({
   margin: theme.spacing(2, 0),
 }));
@@ -61,7 +57,6 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
 
   useEffect(() => {
     setOpen(true);
-
     document.title = 'XML Validator | Settings';
   }, []);
 
@@ -91,7 +86,8 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
   const handleCloseDialog = () => {
     setOpen(false);
     onClose();
-  };
+    document.title = 'XML Validator';
+  };  
 
   return (
     <StyledDialog
@@ -133,9 +129,9 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
         <StyledDivider />
       </StyledDialogContent>
       <StyledDialogActions>
-        <StyledButton autoFocus onClick={handleSaveSettings} variant="contained" color="primary">
+        <Button autoFocus onClick={handleSaveSettings} variant="contained" color="primary">
           {t('xml_validator_view_setting_save')}
-        </StyledButton>
+        </Button>
       </StyledDialogActions>
     </StyledDialog>
   );

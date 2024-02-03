@@ -17,29 +17,31 @@ function XSDDropdown({ onSelectXSD }) {
   const [errorMessageShown, setErrorMessageShown] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [dropdownClicked, setDropdownClicked] = useState(false);
+  const [errorDisplayed, setErrorDisplayed] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/xsd');
         setXsdData(response.data.data || []);
+        setShowLoading(false);
       } catch (error) {
         console.error('Error fetching XSD data:', error);
-      } finally {
-        // Keine Verwendung der 'loading'-Variable hier
+        setServerError(error.message || 'Error fetching XSD data');
+        setErrorMessageShown(true);
+        setErrorDisplayed(true);
       }
     };
 
     const timeout = setTimeout(() => {
-      setShowLoading(false);
-      fetchData();
-      if (dropdownClicked) {
-        setErrorMessageShown(true); // Zeige die Fehlermeldung erst nach dem Laden, wenn das Dropdown angeklickt wurde
+      if (!dropdownClicked && !errorDisplayed) {
+        setShowLoading(false);
+        fetchData();
       }
-    }, 4000);
+    }, 2000);
 
     return () => clearTimeout(timeout);
-  }, [dropdownClicked]);
+  }, [dropdownClicked, errorDisplayed]);
 
   const handleChange = async (event) => {
     const selectedXSDFileName = event.target.value;
@@ -50,26 +52,24 @@ function XSDDropdown({ onSelectXSD }) {
         throw new Error('No XSD file selected');
       }
 
-      // Keine Verwendung der 'loading'-Variable hier
+      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`, { responseType: 'json' });
+      const xsdContent = response.data.data;
 
-      const response = await axios.get(`http://localhost:8080/xsd/${encodeURIComponent(selectedXSDFileName)}`, { responseType: 'blob' });
-      const xsdContent = await response.data.text();
       onSelectXSD(xsdContent);
     } catch (error) {
       setServerError(error.message || 'Error fetching XSD content');
-    } finally {
-      // Keine Verwendung der 'loading'-Variable hier
     }
   };
 
   const handleDropdownClick = () => {
     setDropdownClicked(true);
-    setShowLoading(true); // Zeige die Ladeanimation beim Klicken auf das Dropdown
+    setShowLoading(!selectedOption);
   };
 
   const handleDialogClose = () => {
     setServerError(null);
     setErrorMessageShown(false);
+    setErrorDisplayed(false);
   };
 
   return (
@@ -78,7 +78,7 @@ function XSDDropdown({ onSelectXSD }) {
         <Select
           value={selectedOption}
           onChange={handleChange}
-          onClick={handleDropdownClick} // Verfolge den Klick auf das Dropdown
+          onClick={handleDropdownClick}
           style={{
             marginTop: '10px',
             marginBottom: '20px',
@@ -89,8 +89,8 @@ function XSDDropdown({ onSelectXSD }) {
           }}
           inputProps={{ 'aria-label': 'Without label' }}
         >
-          {showLoading && <MenuItem disabled><CircularProgress size={20} /></MenuItem>}
-          {!showLoading && xsdData.map((xsdFile, index) => (
+          {showLoading && !selectedOption && <MenuItem disabled><CircularProgress size={20} /></MenuItem>}
+          {xsdData.map((xsdFile, index) => (
             <MenuItem key={index} value={xsdFile.fileName}>
               {xsdFile.fileName}
             </MenuItem>
@@ -102,16 +102,16 @@ function XSDDropdown({ onSelectXSD }) {
         open={!!serverError || (errorMessageShown && !xsdData.length)}
         onClose={handleDialogClose}
         fullWidth
-        maxWidth="sm" // Breite angepasst
+        maxWidth="sm"
         PaperProps={{
           style: {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             padding: '20px',
-            borderRadius: '10px', // Hinzugefügte Eckenradius für ein abgerundeteres Aussehen
-            maxHeight: '200px', // Setze eine feste Höhe, um den Scrollbalken zu verhindern
-            overflow: 'hidden', // Verberge den Scrollbalken
+            borderRadius: '10px',
+            maxHeight: '200px',
+            overflow: 'hidden',
           },
         }}
       >
@@ -126,11 +126,11 @@ function XSDDropdown({ onSelectXSD }) {
               <CloseIcon />
             </IconButton>
             <WarningIcon fontSize="large" style={{ color: '#f44336', marginBottom: '10px' }} />
-            <Typography variant="h6" style={{ color: '#f44336', textAlign: 'center', marginBottom: '10px' }}>
+            <Typography variant="h5" style={{ color: '#f44336', textAlign: 'center', marginBottom: '10px' }}>
               Server Error
             </Typography>
-            <Typography variant="body1" style={{ textAlign: 'center', marginBottom: '20px' }}>
-              {serverError || 'No XSD files available. Please try again later.'}
+            <Typography style={{ color: '#000', textAlign: 'center', marginBottom: '4px' }}>
+              Keine XSD-Dateien vorhanden. Starte den Server, um XSD-Dateien zu erhalten.
             </Typography>
           </React.Fragment>
         )}

@@ -28,7 +28,7 @@ const SearchBar = ({ handleSearchChange }) => {
         }}
         style={{
           width: '40%',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backgroundColor: 'white', // Weißer Hintergrund
           transition: 'background-color 0.3s',
         }}
         InputProps={{
@@ -36,15 +36,15 @@ const SearchBar = ({ handleSearchChange }) => {
         }}
         autoComplete="off"
       />
-      <FormControl sx={{ width: '8%', marginTop: '10px' }}>
-        <InputLabel id="search-category-label">Search By</InputLabel>
+      <FormControl sx={{ width: '8%', marginTop: '10px', borderRadius: '4px', backgroundColor: 'white' }}>
         <Select
           labelId="search-category-label"
           id="search-category"
           value={searchCategory}
-          label="Search By"
           onChange={handleCategoryChange}
+          sx={{ '&:before': { borderBottomColor: '#04809c' } }}
         >
+          <InputLabel id="search-category-label" sx={{ color: '#04809c', position: 'absolute', top: -8, left: 8, pointerEvents: 'none' }}></InputLabel>
           <MenuItem value="username">Username</MenuItem>
           <MenuItem value="email">Email</MenuItem>
         </Select>
