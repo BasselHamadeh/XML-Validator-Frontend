@@ -37,7 +37,7 @@ function ErrorTextField({ errors, onClose, scrollToLine }) {
       >
         <div style={{ marginBottom: '10px' }}>
         <Typography variant="h6" color="error" style={{ textDecoration: 'underline', fontWeight: 'bold' }}>
-            Fehlerbeim Validieren des XML
+            Fehler beim Validieren des XML
           </Typography>
         </div>
         <div>
