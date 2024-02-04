@@ -34,11 +34,12 @@
     "xml_validator_view_password": "password (encrypted)",
     "xml_validator_view_view_user": "User Dashboard",
     "xml_validator_view_actions": "administer",
-    "xml_validator_view_validatexsd": "Validate without XSD",
+    "xml_validator_view_validate_without_xsd": "Validate without XSD",
     "xml_validator_view_setting": "Settings",
     "xml_validator_view_login_details": "details",
     "xml_validator_view_language": "Language",
     "xml_validator_view_englisch": "English",
     "xml_validator_view_german": "German",
-    "xml_validator_view_setting_save": "Save settings"
+    "xml_validator_view_setting_save": "Save settings",
+    "xml_validator_view_validation_success": "Validierung erfolgreich"
   }
