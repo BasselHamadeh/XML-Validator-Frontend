@@ -13,6 +13,7 @@ import XSDContainer from '../components/XSD/XSDContainer';
 import ButtonAppBar from '../components/ButtonAppBar';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
+import ErrorTextField from '../components/ErrorTextfield';
 import '../style.css';
 
 function XMLValidatorView() {
@@ -133,11 +134,21 @@ function XMLValidatorView() {
       if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
         isValid = false;
         const parserErrors = xmlDoc.getElementsByTagName('parsererror')[0];
-        errors.push(parserErrors.textContent);
+        const errorMessage = parserErrors.textContent.trim();
+  
+        const containsFirstErrorMessage = errorMessage.includes("Below is a rendering of the page up to the first error.");
+        const containsSecondErrorMessage = errorMessage.includes("This page contains the following errors:");
+  
+        if (containsFirstErrorMessage && containsSecondErrorMessage) {
+          errors.push(errorMessage.replace("Below is a rendering of the page up to the first error.", "").replace("This page contains the following errors:", "").trim());
+        } else {
+          errors.push(errorMessage);
+        }
       }
     } catch (error) {
       isValid = false;
       errors.push(t('xml_validator_view_validation_error'));
+      console.error('Validation error:', error);
     }
   
     setIsValidationSuccess(isValid);
@@ -146,7 +157,8 @@ function XMLValidatorView() {
     if (isValid) {
       setSnackbarOpen(true);
     }
-  };  
+  };
+  
 
   const handleDownloadXML = () => {
     const blob = new Blob([inputXMLText], { type: 'application/xml' });
@@ -269,18 +281,7 @@ function XMLValidatorView() {
         >
           <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate_without_xsd')}
         </Button>
-        {validationErrors.length > 0 && (
-          <Paper elevation={3} style={{ marginTop: '20px', padding: '15px', backgroundColor: '#ffcccc' }}>
-            <Typography variant="body1" color="error">
-              {t('xml_validator_view_validation_errors')}
-            </Typography>
-            {validationErrors.map((error, index) => (
-              <Typography key={index} variant="body2" color="error">
-                {error}
-              </Typography>
-            ))}
-          </Paper>
-        )}
+          <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
         {isValidationSuccess && (
   <Snackbar
     open={snackbarOpen}
@@ -290,7 +291,7 @@ function XMLValidatorView() {
       horizontal: 'left',
     }}
   >
-    <Paper elevation={3} style={{ border: '2px solid #008000', width: '220px', borderRadius: '5px', marginLeft: '44px' }}>
+    <Paper elevation={3} style={{ border: '2px solid #008000', width: '226px', borderRadius: '5px', marginLeft: '44px' }}>
       <Typography style={{ color: '#008000', display: 'flex', alignItems: 'center', marginLeft: '12px' }}>
         {t('xml_validator_view_validation_success')}
         <IconButton
