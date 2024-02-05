@@ -3,20 +3,11 @@ import Snackbar from '@mui/material/Snackbar';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-function ErrorTextField({ errors, onClose, scrollToLine }) {
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    onClose();
-  };
-
+function ErrorTextField({ errors}) {
   return (
     <Snackbar
       open={errors.length > 0}
       autoHideDuration={6000}
-      onClose={handleClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'center',
@@ -36,7 +27,7 @@ function ErrorTextField({ errors, onClose, scrollToLine }) {
         }}
       >
         <div style={{ marginBottom: '10px' }}>
-        <Typography variant="h6" color="error" style={{ textDecoration: 'underline', fontWeight: 'bold' }}>
+          <Typography variant="h6" color="error" style={{ textDecoration: 'underline', fontWeight: 'bold' }}>
             Fehler beim Validieren des XML
           </Typography>
         </div>
@@ -44,7 +35,7 @@ function ErrorTextField({ errors, onClose, scrollToLine }) {
           {errors.map((error, index) => (
             <div key={index} style={{ whiteSpace: 'pre-line', marginBottom: '16px', cursor: 'pointer' }}>
               <Typography variant="body1">
-                <span style={{ fontWeight: 'bold', color: '#000000' }}>{error}</span>
+                <span style={{ fontWeight: 'bold', color: '#000000', fontSize: '15px' }}>{error}</span>
               </Typography>
             </div>
           ))}

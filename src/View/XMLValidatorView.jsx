@@ -6,13 +6,14 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import Snackbar from '@mui/material/Snackbar';
 import ErrorAlertXML from '../components/XML/XMLErrorAlert';
 import ErrorAlertXSD from '../components/XSD/XSDErrorAlert';
 import XMLContainer from '../components/XML/XMLConatiner';
 import XSDContainer from '../components/XSD/XSDContainer';
 import ButtonAppBar from '../components/ButtonAppBar';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
 import ErrorTextField from '../components/ErrorTextfield';
 import '../style.css';
 
@@ -29,6 +30,7 @@ function XMLValidatorView() {
   const [errorAlertXML, setErrorAlertXML] = useState(null);
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [firstClearClick, setFirstClearClick] = useState(true);
 
   const [validationErrors, setValidationErrors] = useState([]);
   const [isValidationSuccess, setIsValidationSuccess] = useState(null);
@@ -52,11 +54,9 @@ function XMLValidatorView() {
     if (selectedFile && selectedFile.name.endsWith('.xml')) {
       setSelectedXMLFileName(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
       setShowInsertXMLButton(true);
-      console.log(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
     } else {
       setSelectedXMLFileName(t('no_file_selected'));
       setShowInsertXMLButton(false);
-      console.log(t('xml_validator_view_invalid_file'));
     }
   };
 
@@ -66,11 +66,9 @@ function XMLValidatorView() {
     if (selectedFile && selectedFile.name.endsWith('.xsd')) {
       setSelectedXSDFileName(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
       setShowInsertXSDButton(true);
-      console.log(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
     } else {
       setSelectedXSDFileName(t('xml_validator_view_no_file_selected'));
       setShowInsertXSDButton(false);
-      console.log(t('xml_validator_view_invalid_file'));
     }
   };
 
@@ -92,7 +90,6 @@ function XMLValidatorView() {
       try {
         const arrayBuffer = await new Response(xsdFileInputRef.current.files[0]).arrayBuffer();
         const text = new TextDecoder().decode(arrayBuffer);
-        console.log('XSD Text Content:', text);
         setInputXSDText(text);
       } catch (error) {
         console.error('Error handling XSD file:', error);
@@ -111,11 +108,18 @@ function XMLValidatorView() {
   const handleTextChangeXSD = (e) => setInputXSDText(e.target.value);
 
   const handleClearXML = () => {
+    if (inputXMLText.trim() === '') {
+      setValidationErrors([]);
+      setFirstClearClick(true);
+    } else {
+      setFirstClearClick(false);
+    }
+  
     setInputXMLText('');
     setSelectedXMLFileName(t('xml_validator_view_no_file_selected'));
     setShowInsertXMLButton(false);
   };
-
+  
   const handleClearXSD = () => {
     setInputXSDText('');
     setSelectedXSDFileName(t('xml_validator_view_no_file_selected'));
@@ -127,18 +131,18 @@ function XMLValidatorView() {
     const parser = new DOMParser();
     let isValid = true;
     let errors = [];
-  
+
     try {
       const xmlDoc = parser.parseFromString(inputXMLText, 'application/xml');
-  
+
       if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
         isValid = false;
         const parserErrors = xmlDoc.getElementsByTagName('parsererror')[0];
         const errorMessage = parserErrors.textContent.trim();
-  
+
         const containsFirstErrorMessage = errorMessage.includes("Below is a rendering of the page up to the first error.");
         const containsSecondErrorMessage = errorMessage.includes("This page contains the following errors:");
-  
+
         if (containsFirstErrorMessage && containsSecondErrorMessage) {
           errors.push(errorMessage.replace("Below is a rendering of the page up to the first error.", "").replace("This page contains the following errors:", "").trim());
         } else {
@@ -150,15 +154,14 @@ function XMLValidatorView() {
       errors.push(t('xml_validator_view_validation_error'));
       console.error('Validation error:', error);
     }
-  
+
     setIsValidationSuccess(isValid);
     setValidationErrors(errors);
-  
+
     if (isValid) {
       setSnackbarOpen(true);
     }
   };
-  
 
   const handleDownloadXML = () => {
     const blob = new Blob([inputXMLText], { type: 'application/xml' });
@@ -172,6 +175,10 @@ function XMLValidatorView() {
     URL.revokeObjectURL(url);
 
     setSnackbarOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Delete button clicked');
   };
 
   const handleDragOver = (e) => e.preventDefault();
@@ -266,46 +273,6 @@ function XMLValidatorView() {
           setSelectedXMLFileName={setSelectedXMLFileName}
           setShowInsertXMLButton={setShowInsertXMLButton}
         />
-        <Button
-          className="ValidateButton"
-          variant="contained"
-          style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
-        >
-          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
-        </Button>
-        <Button
-          className="ValidateButton"
-          onClick={handleValidateWithoutXSD}
-          variant="contained"
-          style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
-        >
-          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate_without_xsd')}
-        </Button>
-          <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
-        {isValidationSuccess && (
-  <Snackbar
-    open={snackbarOpen}
-    onClose={handleSnackbarClose}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'left',
-    }}
-  >
-    <Paper elevation={3} style={{ border: '2px solid #008000', width: '226px', borderRadius: '5px', marginLeft: '44px' }}>
-      <Typography style={{ color: '#008000', display: 'flex', alignItems: 'center', marginLeft: '12px' }}>
-        {t('xml_validator_view_validation_success')}
-        <IconButton
-          color="inherit"
-          onClick={handleDownloadXML}
-          edge="end"
-          style={{ marginLeft: '10px' }}
-        >
-          <GetAppIcon />
-        </IconButton>
-      </Typography>
-    </Paper>
-  </Snackbar>
-)}
       </Grid>
       <Grid item xs={6}>
         <XSDContainer
@@ -323,8 +290,71 @@ function XMLValidatorView() {
           setShowInsertXSDButton={setShowInsertXSDButton}
         />
       </Grid>
+      <Grid item xs={12}>
+        <Grid container spacing={3} direction="row" justifyContent="flex-start">
+          <Grid item>
+            <Button
+              className="XMLClearButton"
+              onClick={() => {
+                handleDelete();
+                handleClearXML();
+              }}
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              style={{ textTransform: 'none', marginLeft: '70px', marginTop: '-120px' }}
+            >
+              {t('xml_validator_view_clear_files')}
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} direction="row" justifyContent="flex-start">
+          <Grid item>
+            <Button
+              className="ValidateButton"
+              variant="contained"
+              style={{ textTransform: 'none', width: '180px', marginLeft: '70px', marginTop: '-40px' }}
+            >
+              <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className="ValidateButton"
+              onClick={handleValidateWithoutXSD}
+              variant="contained"
+              style={{ textTransform: 'none', width: '220px', marginTop: '-40px' }}
+            >
+              <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate_without_xsd')}
+            </Button>
+          </Grid>
+        </Grid>
+        <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
+        {isValidationSuccess && (
+          <Snackbar
+            open={snackbarOpen}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            <Paper elevation={3} style={{ border: '2px solid #008000', width: '226px', borderRadius: '5px' }}>
+              <Typography style={{ color: '#008000', display: 'flex', alignItems: 'center', marginLeft: '12px' }}>
+                {t('xml_validator_view_validation_success')}
+                <IconButton
+                  color="inherit"
+                  onClick={handleDownloadXML}
+                  edge="end"
+                  style={{ marginLeft: '10px' }}
+                >
+                  <GetAppIcon />
+                </IconButton>
+              </Typography>
+            </Paper>
+          </Snackbar>
+        )}
+      </Grid>
     </Grid>
-  );  
+  );
 }
-
 export default XMLValidatorView

@@ -41,32 +41,16 @@ function XMLTextInput({ value, onChange, rows }) {
   }, [value]);
 
   const lineHeight = 20;
-  const lineNumberContainerHeight = '440px';
+  const lineNumberContainerHeight = rows * lineHeight;
 
   return (
-    <Grid container spacing={2} style={{ height: '460px', marginTop: '12px' }}>
-      <Grid item xs={2}>
-        <div
-          style={{
-            fontFamily: 'monospace',
-            color: '#265f6b',
-            userSelect: 'none',
-            pointerEvents: 'none',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            alignSelf: 'flex-start',
-            height: lineNumberContainerHeight,
-            paddingRight: '10px',
-          }}
-          ref={lineNumberRef}
-        >
-          {lineNumbers.map((line, index) => (
-            <div key={index} style={{ height: `${lineHeight}px`, fontWeight: 'lighter', fontSize: '12px', marginRight: '-8px', marginBottom: '-1px' }}>
-              {line.trim() === '' ? '\u00a0' : index + 1}
-            </div>
-          ))}
-        </div>
+    <Grid container style={{ height: `${lineNumberContainerHeight}px`, marginTop: '27px' }}>
+      <Grid item xs={2} style={{ overflowY: 'hidden', borderRight: '1px solid #e0e0e0', height: '450px', marginLeft: '-110px' }} ref={lineNumberRef}>
+        {lineNumbers.map((line, index) => (
+          <div key={index} style={{ textAlign: 'right', padding: '3px 5px', height: `${lineHeight}px`, fontWeight: 'lighter', fontSize: '12px', marginBottom: '-1px', color: '#04809c' }}>
+            {line.trim() === '' ? '\u00a0' : index + 1}
+          </div>
+        ))}
       </Grid>
       <Grid item xs={10}>
         <Tooltip title={value.trim() === '' ? t('xml_validator_view_insert_xml_file') : ''} arrow placement="top">
@@ -84,7 +68,7 @@ function XMLTextInput({ value, onChange, rows }) {
               overflowY: 'scroll',
               fontSize: '16px',
               width: '104%',
-              marginLeft: '-130px',
+              marginLeft: '-18px'
             }}
           />
         </Tooltip>

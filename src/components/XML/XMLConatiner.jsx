@@ -1,10 +1,8 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import DeleteIcon from '@mui/icons-material/Delete';
 import XMLDateiAuswählenButton from './XMLDateiAuswählenButton';
-import XMLTextField from './XMLTextField';
+import XMLTextInput from './XMLTextField';
 import Heading from '../Heading/HomeHeading';
 
 const XMLContainer = ({
@@ -16,9 +14,8 @@ const XMLContainer = ({
   setShowInsertXMLButton,
   inputXMLText,
   onTextChange,
-  onClear,
-  onDrop,
   errorAlertXML,
+  onDrop,
 }) => {
   const { t } = useTranslation();
   const xmlFileInputRef = useRef(null);
@@ -72,27 +69,9 @@ const XMLContainer = ({
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={12}>
             <div className="XMLInputContainer" onDrop={(e) => onDrop(e, 'xml', 'XMLInputContainer')}>
-              <XMLTextField value={inputXMLText} onChange={onTextChange} rows={4} />
+              <XMLTextInput value={inputXMLText} onChange={onTextChange} rows={4} />
             </div>
             <div className="XMLErrorAlertContainer">{errorAlertXML}</div>
-          </Grid>
-          <Grid item xs={12}>
-            <div className="XMLButtonGrid">
-              <Button
-                className="XMLClearButton"
-                onClick={() => {
-                  onClear();
-                  setInputXMLText('');
-                  setSelectedXMLFileName(t('xml_validator_view_no_file_selected'));
-                  setShowInsertXMLButton(false);
-                }}
-                variant="outlined"
-                startIcon={<DeleteIcon />}
-                style={{ textTransform: 'none', marginLeft: '30px', marginTop: '10px' }}
-              >
-                {t('xml_validator_view_clear_files')}
-              </Button>
-            </div>
           </Grid>
         </Grid>
       </div>
