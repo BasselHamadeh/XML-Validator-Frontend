@@ -16,6 +16,7 @@ const UsersView = () => {
   const [loginDetails, setLoginDetails] = useState([]);
   const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [lastLoggedInUser, setLastLoggedInUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +46,17 @@ const UsersView = () => {
         if (response.ok) {
           const details = await response.json();
           setLoginDetails(details);
+
+          // Set the last logged-in user based on the response
+          if (details.length > 0) {
+            const lastLogin = details.reduce((prev, current) =>
+              new Date(current.jahr, current.monat - 1, current.tag, ...current.uhrzeit.split(':')) >
+              new Date(prev.jahr, prev.monat - 1, prev.tag, ...prev.uhrzeit.split(':'))
+                ? current
+                : prev
+            );
+            setLastLoggedInUser(lastLogin);
+          }
         }
       } catch (error) {
         console.error('Error fetching login details:', error.message);
@@ -128,6 +140,13 @@ const UsersView = () => {
           selectedUser={selectedUser}
           onClose={() => setLoginDetailsDialogOpen(false)}
         />
+      )}
+
+      {!serverNotStarted && lastLoggedInUser && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <h3 style={{ textDecoration: 'underline' }}>Aktuell eingeloggter Benutzer:</h3>
+          <p style={{ color: '#04809c', fontWeight: 'bold', fontSize: '20px' }}>{lastLoggedInUser.username}</p>
+        </div>
       )}
     </div>
   );

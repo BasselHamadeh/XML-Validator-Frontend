@@ -28,8 +28,6 @@ function XSDDropdown({ onSelectXSD }) {
       } catch (error) {
         console.error('Error fetching XSD data:', error);
         setServerError(error.message || 'Error fetching XSD data');
-        setErrorMessageShown(true);
-        setErrorDisplayed(true);
       }
     };
 

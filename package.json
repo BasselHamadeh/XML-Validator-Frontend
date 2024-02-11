@@ -31,7 +31,10 @@
     "react-scripts": "^5.0.1",
     "tsutils": "^3.21.0",
     "typescript": "^2.9.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xmldom": "^0.6.0",
+    "xmllint": "^0.1.1",
+    "xsd-schema-validator": "^0.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
