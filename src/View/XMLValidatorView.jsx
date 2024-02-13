@@ -116,7 +116,34 @@ function XMLValidatorView() {
     xsdFileInputRef.current.value = '';
   };
 
-  const handleValidate = () => console.log('Validierung ausführen...');
+  const validateWithXSD = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/validateWithXSD', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ xmlData: inputXMLText, xsdData: { xsd: inputXSDText } }),
+      });
+
+      if (response.ok) {
+        try {
+          const result = await response.json();
+          console.log('Response from the server:', result);
+          setSnackbarOpen(true);
+        } catch (jsonError) {
+          console.error('Error parsing JSON response:', jsonError);
+        }
+      } else {
+        const errorResponse = await response.json();
+        console.error('Validation error:', response.statusText, errorResponse.error);
+        // Handle validation error, update state if needed
+      }
+    } catch (error) {
+      console.error('Error during validation:', error);
+      // Handle general validation error, update state if needed
+    }
+  };
 
   const handleValidateWithoutXSD = async () => {
     try {
@@ -140,13 +167,15 @@ function XMLValidatorView() {
         const errorResponse = await response.json();
         console.error('Fehler beim Validieren:', response.statusText, errorResponse.errors);
   
-        // Setze die Fehler im State
-        setValidationErrors(errorResponse.errors);
+        setValidationErrors(errorResponse.errors.map(error => error.replace(/\n/g, ' ')));
+  
+        console.error('Genauer Fehler:', errorResponse.errors[0]);
       }
     } catch (error) {
       console.error('Fehler beim Validieren:', error);
     }
   };
+  
   
 
   const handleDownloadXML = () => {
@@ -276,7 +305,7 @@ function XMLValidatorView() {
           </div>
           <Button
             className="ValidateButton"
-            onClick={handleValidate}
+            onClick={validateWithXSD}
             variant="contained"
             style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
           >

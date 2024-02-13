@@ -18,7 +18,6 @@ function ErrorTextField({ errors }) {
       <Paper
         elevation={3}
         style={{
-          textDecoration: 'underline',
           fontSize: '14px',
           maxHeight: '110px',
           overflowY: 'auto',
@@ -28,7 +27,7 @@ function ErrorTextField({ errors }) {
         }}
       >
         {errorArray.map((error, index) => (
-          <div key={index} style={{ whiteSpace: 'pre-line', cursor: 'pointer' }}>
+          <div key={index} style={{ whiteSpace: 'pre-line', cursor: 'pointer', marginBottom: '5px' }}>
             <Typography variant="body1" style={{ fontWeight: 'bold', color: '#000000', fontSize: '15px', textAlign: 'left' }}>
               {error.success === false ? error.errors[2] : error.message || error}
             </Typography>
