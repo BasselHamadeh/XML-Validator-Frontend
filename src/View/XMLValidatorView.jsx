@@ -31,7 +31,7 @@ function XMLValidatorView() {
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
-  const [isValidationSuccess, setIsValidationSuccess] = useState(null);
+  const [isValidationSuccess] = useState(null);
 
   useEffect(() => {
     document.title = 'XML Validator';
@@ -118,41 +118,36 @@ function XMLValidatorView() {
 
   const handleValidate = () => console.log('Validierung ausführen...');
 
-  const handleValidateWithoutXSD = () => {
-    const parser = new DOMParser();
-    let isValid = true;
-    let errors = [];
-
+  const handleValidateWithoutXSD = async () => {
     try {
-      const xmlDoc = parser.parseFromString(inputXMLText, 'application/xml');
-
-      if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
-        isValid = false;
-        const parserErrors = xmlDoc.getElementsByTagName('parsererror')[0];
-        const errorMessage = parserErrors.textContent.trim();
-
-        const containsFirstErrorMessage = errorMessage.includes("Below is a rendering of the page up to the first error.");
-        const containsSecondErrorMessage = errorMessage.includes("This page contains the following errors:");
-
-        if (containsFirstErrorMessage && containsSecondErrorMessage) {
-          errors.push(errorMessage.replace("Below is a rendering of the page up to the first error.", "").replace("This page contains the following errors:", "").trim());
-        } else {
-          errors.push(errorMessage);
+      const response = await fetch('http://localhost:8080/validateWithoutXSD', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ xmlData: inputXMLText }),
+      });
+  
+      if (response.ok) {
+        try {
+          const result = await response.json();
+          console.log('Antwort vom Server:', result);
+          setSnackbarOpen(true);
+        } catch (jsonError) {
+          console.error('Fehler beim Parsen der JSON-Antwort:', jsonError);
         }
+      } else {
+        const errorResponse = await response.json();
+        console.error('Fehler beim Validieren:', response.statusText, errorResponse.errors);
+  
+        // Setze die Fehler im State
+        setValidationErrors(errorResponse.errors);
       }
     } catch (error) {
-      isValid = false;
-      errors.push(t('xml_validator_view_validation_error'));
-      console.error('Validation error:', error);
-    }
-
-    setIsValidationSuccess(isValid);
-    setValidationErrors(errors);
-
-    if (isValid) {
-      setSnackbarOpen(true);
+      console.error('Fehler beim Validieren:', error);
     }
   };
+  
 
   const handleDownloadXML = () => {
     const blob = new Blob([inputXMLText], { type: 'application/xml' });

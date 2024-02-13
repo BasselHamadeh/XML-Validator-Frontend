@@ -4,9 +4,11 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 function ErrorTextField({ errors }) {
+  const errorArray = Array.isArray(errors) ? errors : [errors];
+
   return (
     <Snackbar
-      open={errors.length > 0}
+      open={errorArray.length > 0}
       autoHideDuration={6000}
       anchorOrigin={{
         vertical: 'bottom',
@@ -25,10 +27,10 @@ function ErrorTextField({ errors }) {
           display: 'flex',
         }}
       >
-        {errors.map((error, index) => (
+        {errorArray.map((error, index) => (
           <div key={index} style={{ whiteSpace: 'pre-line', cursor: 'pointer' }}>
             <Typography variant="body1" style={{ fontWeight: 'bold', color: '#000000', fontSize: '15px', textAlign: 'left' }}>
-              {error}
+              {error.success === false ? error.errors[2] : error.message || error}
             </Typography>
           </div>
         ))}

@@ -19,6 +19,8 @@
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.4.2",
     "papaparse": "^5.4.1",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-csv-reader": "^4.0.0",
@@ -31,10 +33,12 @@
     "react-scripts": "^5.0.1",
     "tsutils": "^3.21.0",
     "typescript": "^2.9.2",
+    "url": "^0.11.3",
     "web-vitals": "^2.1.4",
     "xmldom": "^0.6.0",
     "xmllint": "^0.1.1",
-    "xsd-schema-validator": "^0.8.1"
+    "xsd-schema-validator": "^0.8.1",
+    "xsd2jsonschema": "^0.3.7"
   },
   "scripts": {
     "start": "react-scripts start",
