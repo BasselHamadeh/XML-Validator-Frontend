@@ -31,7 +31,7 @@ function XMLValidatorView() {
   const [errorAlertXSD, setErrorAlertXSD] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
-  const [isValidationSuccess] = useState(null);
+  const [isValidationSuccess, setIsValidationSuccess] = useState(false);
 
   useEffect(() => {
     document.title = 'XML Validator';
@@ -125,11 +125,12 @@ function XMLValidatorView() {
         },
         body: JSON.stringify({ xmlData: inputXMLText, xsdData: { xsd: inputXSDText } }),
       });
-
+  
       if (response.ok) {
         try {
           const result = await response.json();
           console.log('Response from the server:', result);
+          setIsValidationSuccess(true);
           setSnackbarOpen(true);
         } catch (jsonError) {
           console.error('Error parsing JSON response:', jsonError);
@@ -137,11 +138,12 @@ function XMLValidatorView() {
       } else {
         const errorResponse = await response.json();
         console.error('Validation error:', response.statusText, errorResponse.error);
-        // Handle validation error, update state if needed
+        setValidationErrors(errorResponse.errors.map(error => error.replace(/\n/g, ' ')));
+        setIsValidationSuccess(false);
+        setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error during validation:', error);
-      // Handle general validation error, update state if needed
     }
   };
 
