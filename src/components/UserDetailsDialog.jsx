@@ -65,11 +65,6 @@ const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
                 <ListItemText
                   primary={
                     <Typography>
-                      email: <strong>{detail.email}</strong>
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography>
                       Datum: {detail.tag}.{detail.monat}.{detail.jahr} - Uhrzeit: {detail.uhrzeit}
                     </Typography>
                   }

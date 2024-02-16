@@ -116,7 +116,7 @@ function XMLValidatorView() {
     xsdFileInputRef.current.value = '';
   };
 
-  const validateWithXSD = async () => {
+  const handleValidateWithXSD = async () => {
     try {
       const response = await fetch('http://localhost:8080/validateWithXSD', {
         method: 'POST',
@@ -127,18 +127,17 @@ function XMLValidatorView() {
       });
   
       if (response.ok) {
-        try {
-          const result = await response.json();
-          console.log('Response from the server:', result);
-          setIsValidationSuccess(true);
-          setSnackbarOpen(true);
-        } catch (jsonError) {
-          console.error('Error parsing JSON response:', jsonError);
-        }
+        const result = await response.json();
+        console.log('Response from the server:', result);
+        setIsValidationSuccess(result.success);
+        setSnackbarOpen(true);
       } else {
         const errorResponse = await response.json();
-        console.error('Validation error:', response.statusText, errorResponse.error);
-        setValidationErrors(errorResponse.errors.map(error => error.replace(/\n/g, ' ')));
+        console.error('Validation error:', response.statusText, errorResponse.errors);
+  
+        setValidationErrors(errorResponse.errors.map(error => error ? error.replace(/\n/g, ' ') : 'Unknown Error'));
+  
+        console.error('Detailed error:', errorResponse.errors);
         setIsValidationSuccess(false);
         setSnackbarOpen(true);
       }
@@ -178,8 +177,6 @@ function XMLValidatorView() {
     }
   };
   
-  
-
   const handleDownloadXML = () => {
     const blob = new Blob([inputXMLText], { type: 'application/xml' });
     const url = URL.createObjectURL(blob);
@@ -307,7 +304,7 @@ function XMLValidatorView() {
           </div>
           <Button
             className="ValidateButton"
-            onClick={validateWithXSD}
+            onClick={handleValidateWithXSD}
             variant="contained"
             style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
           >

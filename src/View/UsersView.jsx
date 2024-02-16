@@ -47,7 +47,6 @@ const UsersView = () => {
           const details = await response.json();
           setLoginDetails(details);
 
-          // Set the last logged-in user based on the response
           if (details.length > 0) {
             const lastLogin = details.reduce((prev, current) =>
               new Date(current.jahr, current.monat - 1, current.tag, ...current.uhrzeit.split(':')) >
@@ -65,6 +64,25 @@ const UsersView = () => {
 
     fetchLoginDetails();
   }, []);
+
+  const calculateSessionDuration = () => {
+    if (lastLoggedInUser) {
+      const loginTime = new Date(
+        lastLoggedInUser.jahr,
+        lastLoggedInUser.monat - 1,
+        lastLoggedInUser.tag,
+        ...lastLoggedInUser.uhrzeit.split(':')
+      );
+      const now = new Date();
+      const durationInMilliseconds = now - loginTime;
+      const days = Math.floor(durationInMilliseconds / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((durationInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+      return `${days > 0 ? days + " Tage " : ""}${hours > 0 ? hours + " Stunden " : ""}${minutes} Minuten`;
+    }
+    return null;
+  };
+  
 
   const sortedUsers = [...uploadedUsers].sort((a, b) => {
     if (a.username.toLowerCase() === 'admin' && b.username.toLowerCase() !== 'admin') {
@@ -117,6 +135,8 @@ const UsersView = () => {
     setPage(0);
   };
 
+  const sessionDuration = calculateSessionDuration();
+
   return (
     <div>
       <ButtonAppBar />
@@ -146,6 +166,9 @@ const UsersView = () => {
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <h3 style={{ textDecoration: 'underline' }}>Aktuell eingeloggter Benutzer:</h3>
           <p style={{ color: '#04809c', fontWeight: 'bold', fontSize: '20px' }}>{lastLoggedInUser.username}</p>
+          {sessionDuration && (
+            <p style={{ fontSize: '14px', color: '#888' }}>Angemeldet seit {sessionDuration}</p>
+          )}
         </div>
       )}
     </div>
