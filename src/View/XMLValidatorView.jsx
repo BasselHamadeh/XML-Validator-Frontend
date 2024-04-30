@@ -11,6 +11,8 @@ import XMLContainer from '../components/XML/XMLConatiner';
 import XSDContainer from '../components/XSD/XSDContainer';
 import ButtonAppBar from '../components/ButtonAppBar';
 import ErrorTextField from '../components/ErrorTextfield';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import '../style.css';
 
 function XMLValidatorView() {
@@ -73,6 +75,7 @@ function XMLValidatorView() {
     };
 
     reader.readAsText(xmlFileInputRef.current.files[0]);
+    setIsValidationSuccess(false);
   };
 
   const handleInsertXSD = async () => {
@@ -133,26 +136,32 @@ function XMLValidatorView() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ xmlData: inputXMLText, xsdData: { xsd: inputXSDText } }),
+        body: JSON.stringify({ xmlData: inputXMLText, xsdData: inputXSDText }),
       });
   
       if (response.ok) {
         const result = await response.json();
-        console.log('Response from the server:', result);
+        console.log('Antwort vom Server:', result);
         setIsValidationSuccess(result.success);
         setSnackbarOpen(true);
+        if (result.success) {
+          setValidationErrors([]);
+        } else if (result.errors && result.errors.length > 0) {
+          const firstError = result.errors[0].startsWith(',') ? result.errors[0].substring(1) : result.errors[0];
+          setValidationErrors([firstError, ...result.errors.slice(1)].map(error => error ? error.toString().replace(/\n/g, ' ') : 'Unknown Error'));
+        }
       } else {
         const errorResponse = await response.json();
-        console.error('Validation error:', response.statusText, errorResponse.errors);
+        console.error('Fehler beim Validieren:', response.statusText, errorResponse.errors);
   
-        setValidationErrors(errorResponse.errors.map(error => error ? error.replace(/\n/g, ' ') : 'Unknown Error'));
+        setValidationErrors(errorResponse.errors.map(error => error ? error.toString().replace(/\n/g, '\n') : 'Unknown Error'));
   
-        console.error('Detailed error:', errorResponse.errors);
+        console.error('Genauer Fehler:', errorResponse.errors[0]);
         setIsValidationSuccess(false);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error during validation:', error);
+      console.error('Fehler beim Validieren:', error);
     }
   };
 
@@ -198,7 +207,7 @@ function XMLValidatorView() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'validated_file.xml';
+    a.download = selectedXMLFileName.includes('selected file: ') ? selectedXMLFileName.split('selected file: ')[1] : selectedXMLFileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -312,7 +321,7 @@ function XMLValidatorView() {
             startIcon={<DeleteIcon />}
             style={{ textTransform: 'none', marginLeft: '70px', marginTop: '32px' }}
           >
-            Clear Files
+            {t('xml_validator_view_clear_files')}
           </Button>
         </div>
         <Button
@@ -331,19 +340,23 @@ function XMLValidatorView() {
         >
           <VerifiedIcon style={{ marginRight: '10px' }} /> Validate Without XSD
         </Button>
-        {isValidationSuccess && (
-          <Button
-            className="DownloadButton"
-            onClick={handleDownloadXML}
-            variant="outlined"
-            style={{ marginTop: '20px', textTransform: 'none', width: '40px', marginLeft: '20px' }}
-          >
-            <GetAppIcon />
-          </Button>
+        {isValidationSuccess ? (
+          <Tooltip title={t('xml_validator_view_download')} arrow>
+            <IconButton
+              className="DownloadButton"
+              onClick={handleDownloadXML}
+              style={{ marginTop: '20px', marginLeft: '20px', color: '#04809c' }}
+            >
+              <GetAppIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
+            {validationErrors.length > 0 && (
+              <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
+            )}
+          </div>
         )}
-        <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
-          <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
-        </div>
       </Grid>
       <Grid item xs={6}>
         <XSDContainer

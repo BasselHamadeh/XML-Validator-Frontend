@@ -22,6 +22,7 @@ function ErrorTextField({ errors }) {
           maxHeight: '110px',
           overflowY: 'auto',
           width: '100%',
+          maxWidth: '700px',
           padding: '15px',
           display: 'flex',
         }}
@@ -38,4 +39,4 @@ function ErrorTextField({ errors }) {
   );
 }
 
-export default ErrorTextField
+export default ErrorTextField;

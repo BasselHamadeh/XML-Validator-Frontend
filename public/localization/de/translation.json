@@ -42,5 +42,6 @@
     "xml_validator_view_englisch": "Englisch",
     "xml_validator_view_german": "Deutsch",
     "xml_validator_view_setting_save": "Einstellungen speichern",
-    "xml_validator_view_validation_success": "Validierung erfolgreich"
+    "xml_validator_view_validation_success": "Validierung erfolgreich",
+    "xml_validator_view_download": "Herunterladen"
   }
