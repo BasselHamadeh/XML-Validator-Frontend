@@ -30,7 +30,6 @@ const XSDContainer = ({
     reader.onload = async (event) => {
       const fileContent = event.target.result;
 
-      // Statt onInsert(fileContent) den Inhalt direkt ins Textfeld einfügen
       setInputXSDText(fileContent);
 
       setSelectedXSDFileName(t('xml_validator_view_selected_file', { fileName: xsdFileInputRef.current.files[0].name }));

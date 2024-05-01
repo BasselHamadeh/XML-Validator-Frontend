@@ -14,7 +14,7 @@ const OverviewDialog = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle style={{ fontWeight: 'bold' }}>
-        {t('xml_validator_view_settings')}
+        {t('xml_validator_overview')}
         <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
           <CloseIcon />
         </IconButton>

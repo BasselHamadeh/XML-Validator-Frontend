@@ -28,7 +28,6 @@ const XMLContainer = ({
       setSelectedXMLFileName(t('xml_validator_view_selected_file', { fileName: selectedFile.name }));
       setShowInsertXMLButton(true);
     } else {
-      setSelectedXMLFileName(t('no_file_selected'));
       setShowInsertXMLButton(false);
     }
   };

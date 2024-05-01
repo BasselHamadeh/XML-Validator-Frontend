@@ -1,46 +1,78 @@
-{
+{    
+    "xml_validator_view_heading": "XML Validator",
+    "xml_validator_user_heading": "User Dashboard",
+        
+    
     "xml_validator_view_selected_file": "selected file: {{fileName}}",
-    "xml_validator_view_no_file_selected": "no file selected",
-    "xml_validator_view_invalid_file": "Invalid file selected. Please choose an XML file.",
-    "xml_validator_view_xml_validator": "XML Validator",
-    "xml_validator_view_upload_xml_files": "Upload XML files and perform validations",
     "xml_validator_view_select_file": "Select File",
-    "xml_validator_view_clear_files": "To empty",
-    "xml_validator_view_validate": "Validate XML",
-    "xml_validator_view_upload_xsd_files": "Upload XSD schema files and use them to validate your XML data",
-    "xml_validator_view_insert": "Insert",
-    "xml_validator_view_settings": "Overview",
-    "xml_validator_view_what_is_xml": "What is XML?",
-    "xml_validator_view_xml_description": "XML (eXtensible Markup Language) is an extensible markup language used to represent and structure data in a formatted text format.",
-    "xml_validator_view_what_is_xsd": "What is XSD?",
-    "xml_validator_view_xsd_description": "XSD (XML Schema Definition) is a standardized language written in XML used to define the structure and format of XML documents.",
-    "xml_validator_view_design_selection": "Design Selection",
-    "xml_validator_view_dark_theme": "Dark Design",
-    "xml_validator_view_light_theme": "Bright Design",
+    "xml_validator_view_upload_xml_files": "Upload XML files and perform validations",
+    "xml_validator_view_insert_xml": "Insert",
     "xml_validator_view_insert_xml_file": "Insert XML file",
+    "xml_validator_view_no_file_selected": "no file selected",
+    "xml_validator_view_upload_xsd_files": "Upload XSD schema files and use them to validate your XML data",
+    "xml_validator_view_clear_files": "To empty",
+    "xml_validator_view_insert_xsd": "Insert",
     "xml_validator_view_insert_xsd_file": "Insert XSD file",
-    "xml_validator_view_selected_file_xsd": "Selected {{fileType}} schema file: {{fileName}}",
+    "xml_validator_view_invalid_file": "Invalid file selected. Please choose an XML file.",
     "xml_validator_view_drag_drop_xml": "Only XML files can be inserted into the XML text field.",
-    "xml_validator_view_drag_drop_xsd": "Only XSD files can be inserted into the XSD text field.",    
-    "xml_validator_view_design": "Design Theme",
-    "xml_validator_view_home": "Home",
-    "xml_validator_view_user": "User",
-    "xml_validator_view_downloads": "Downloads",
-    "xml_validator_view_logout": "Logout",
-    "xml_validator_view_name": "username",
-    "xml_validator_view_email": "email",
-    "xml_validator_view_role": "role",
-    "xml_validator_view_group": "group",
-    "xml_validator_view_password": "password (encrypted)",
-    "xml_validator_view_view_user": "User Dashboard",
-    "xml_validator_view_actions": "administer",
+    "xml_validator_view_drag_drop_xsd": "Only XSD files can be inserted into the XSD text field.",
+    "xml_validator_view_validate": "Validate XML",
     "xml_validator_view_validate_without_xsd": "Validate without XSD",
-    "xml_validator_view_setting": "Settings",
-    "xml_validator_view_login_details": "details",
-    "xml_validator_view_language": "Language",
-    "xml_validator_view_englisch": "English",
-    "xml_validator_view_german": "German",
-    "xml_validator_view_setting_save": "Save settings",
-    "xml_validator_view_validation_success": "Validation successful",
-    "xml_validator_view_download": "Download"
-  }
+    "xml_validator_view_download": "Download",
+
+    
+    "xml_validator_dropdown_server_error": "Server error",
+    "xml_validator_dropdown_error": "No XSD files available. Start the server to get XSD files.",
+
+        
+    "xml_validator_overview": "Overview",
+    "xml_validator_what_is_xml": "What is XML?",
+    "xml_validator_xml_description": "XML (eXtensible Markup Language) is an extensible markup language used to represent and structure data in a formatted text format.",
+    "xml_validator_what_is_xsd": "What is XSD?",
+    "xml_validator_xsd_description": "XSD (XML Schema Definition) is a standardized language written in XML used to define the structure and format of XML documents.",
+    
+
+    "xml_validator_design": "Design Theme",
+    "xml_validator_dark_theme": "Dark Design",
+    "xml_validator_light_theme": "Bright Design",
+
+    
+    "xml_validator_user_username": "Username",
+    "xml_validator_user_search_placeholder": "Serach . . .",
+    "xml_validator_user_server_error": "Oops! It seems that the server is not running.",
+    "xml_validator_user_server_error_message": "Please start the server and click Update when finished.",
+    "xml_validator_user_duration": "registered since: ",
+    "xml_validator_user_logged_in": "Currently logged in user: ",
+
+    
+    "xml_validator_setting": "Settings",
+    "xml_validator_setting_language": "Language",
+    "xml_validator_setting_englisch": "English",
+    "xml_validator_setting_german": "German",
+    "xml_validator_setting_save": "Save settings",
+
+    
+    "xml_validator_sidebar_exit": "Exit",
+
+
+    "xml_validator_user_login_details_for": "Login details for ",
+    "xml_validator_user_all_login": "Total number of logins: ",
+    "xml_validator_user_no_login": "no details available",
+    "xml_validator_user_date": "Date",
+    "xml_validator_user_time": "Time",
+    "xml_validator_user_close": "Close",
+    
+
+    "xml_validator_user_id": "ID",
+    "xml_validator_user_name": "name",
+    "xml_validator_user_email": "email",
+    "xml_validator_user_role": "role",
+    "xml_validator_user_team": "security group",
+    "xml_validator_user_password": "password",
+    "xml_validator_user_login_details": "login details",
+    "xml_validator_user_no_data": "No data available",
+    "xml_validator_user_show_details": "Show Details",
+    "xml_validator_user_days": "days ",
+    "xml_validator_user_hours": "hours ",
+    "xml_validator_user_minute": "minutes"
+}

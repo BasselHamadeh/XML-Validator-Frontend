@@ -27,7 +27,7 @@ const XSDDateiAuswählenButton = ({ onClick, selectedFileName, showInsertButton,
             variant="outlined"
             style={{ textTransform: 'none', marginTop: '-7px' }}
           >
-            {t('xml_validator_view_insert')}
+            {t('xml_validator_view_insert_xsd')}
           </Button>
         </Grid>
       )}

@@ -100,7 +100,7 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item xs={9}>
             <Typography variant="h4" style={{ textAlign: 'left', marginBottom: '1rem' }}>
-              {t('xml_validator_view_setting')}
+              {t('xml_validator_setting')}
             </Typography>
           </Grid>
           <Grid item xs={3} style={{ textAlign: 'right' }}>
@@ -112,17 +112,16 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
       </StyledDialogTitle>
       <StyledDialogContent>
         <Typography variant="subtitle1" gutterBottom style={{ marginTop: '20px', fontWeight: 'bold' }}>
-          {t('xml_validator_view_language')}
+          {t('xml_validator_setting_language')}
         </Typography>
         <StyledSelect
-          label={t('xml_validator_view_language_focus')}
           value={selectedLanguage}
           onChange={(e) => handleLanguageChange(e.target.value)}
           fullWidth
           margin="none"
         >
-          <MenuItem value="en">{t('xml_validator_view_englisch')}</MenuItem>
-          <MenuItem value="de">{t('xml_validator_view_german')}</MenuItem>
+          <MenuItem value="en">{t('xml_validator_setting_englisch')}</MenuItem>
+          <MenuItem value="de">{t('xml_validator_setting_german')}</MenuItem>
         </StyledSelect>
         <StyledDivider />
         <DesignMenu onThemeChange={handleThemeChange} />
@@ -130,7 +129,7 @@ const Settings = ({ onThemeChange, onClose = () => {} }) => {
       </StyledDialogContent>
       <StyledDialogActions>
         <Button autoFocus onClick={handleSaveSettings} variant="contained" color="primary">
-          {t('xml_validator_view_setting_save')}
+          {t('xml_validator_setting_save')}
         </Button>
       </StyledDialogActions>
     </StyledDialog>

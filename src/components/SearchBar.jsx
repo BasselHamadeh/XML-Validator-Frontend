@@ -5,10 +5,12 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { useTranslation } from 'react-i18next';
 
 const SearchBar = ({ handleSearchChange }) => {
   const [searchCategory, setSearchCategory] = useState('username');
   const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useTranslation();
 
   const handleCategoryChange = (event) => {
     setSearchCategory(event.target.value);
@@ -19,7 +21,7 @@ const SearchBar = ({ handleSearchChange }) => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '20px', marginLeft: '8px' }}>
       <TextField
         variant="outlined"
-        placeholder={`Search by ${searchCategory === 'username' ? 'Username' : 'Email'}...`}
+        placeholder={t('xml_validator_user_search_placeholder', { searchCategory: searchCategory === 'username' ? 'Benutzernamen' : 'E-Mail' })}
         fullWidth
         margin="normal"
         onChange={(event) => {
@@ -28,7 +30,7 @@ const SearchBar = ({ handleSearchChange }) => {
         }}
         style={{
           width: '40%',
-          backgroundColor: 'white', // Weißer Hintergrund
+          backgroundColor: 'white',
           transition: 'background-color 0.3s',
         }}
         InputProps={{
@@ -45,8 +47,8 @@ const SearchBar = ({ handleSearchChange }) => {
           sx={{ '&:before': { borderBottomColor: '#04809c' } }}
         >
           <InputLabel id="search-category-label" sx={{ color: '#04809c', position: 'absolute', top: -8, left: 8, pointerEvents: 'none' }}></InputLabel>
-          <MenuItem value="username">Username</MenuItem>
-          <MenuItem value="email">Email</MenuItem>
+          <MenuItem value="username">{t('xml_validator_user_username')}</MenuItem>
+          <MenuItem value="email">{t('xml_validator_user_email')}</MenuItem>
         </Select>
       </FormControl>
     </div>

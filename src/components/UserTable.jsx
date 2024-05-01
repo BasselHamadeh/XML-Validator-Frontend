@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { TableCell } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const StyledTableCell = ({ children, isBold, isHeader, ...other }) => {
   return (
@@ -47,18 +48,20 @@ const StyledTableRow = ({ children, isBold, ...other }) => {
 };
 
 const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, handleLoginDetailsClick }) => {
+  const { t } = useTranslation();
+
   return (
     <TableContainer component={Paper} elevation={3} style={{ marginTop: '10px', marginLeft: '7px', borderRadius: '8px' }}>
       <Table sx={{ minWidth: 400 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell isBold isHeader>ID</StyledTableCell>
-            <StyledTableCell isBold isHeader>Name</StyledTableCell>
-            <StyledTableCell isBold isHeader>Email</StyledTableCell>
-            <StyledTableCell isBold isHeader>Role</StyledTableCell>
-            <StyledTableCell isBold isHeader>Team</StyledTableCell>
-            <StyledTableCell isBold isHeader>Password</StyledTableCell>
-            <StyledTableCell isBold isHeader>Login Details</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_id')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_name')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_email')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_role')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_team')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_password')}</StyledTableCell>
+            <StyledTableCell isBold isHeader>{t('xml_validator_user_login_details')}</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,12 +74,12 @@ const UserTable = ({ filteredUsers, page, rowsPerPage, handleChangePage, handleC
               <StyledTableCell>{row.username}</StyledTableCell>
               <StyledTableCell>{row.email}</StyledTableCell>
               <StyledTableCell>
-                {row.status ? row.status : <span style={{ color: 'red' }}>Keine Daten vorhanden</span>}
+                {row.status ? row.status : <span style={{ color: 'red' }}>{t('xml_validator_user_no_data')}</span>}
               </StyledTableCell>
               <StyledTableCell>{row.sicherheitsgruppe}</StyledTableCell>
               <StyledTableCell>{row.password}</StyledTableCell>
               <StyledTableCell>
-                <Tooltip title="Show Details" arrow enterTouchDelay={50} leaveTouchDelay={300}>
+                <Tooltip title={t('xml_validator_user_show_details')} arrow enterTouchDelay={50} leaveTouchDelay={300}>
                   <IconButton
                     color="primary"
                     onClick={() => handleLoginDetailsClick(row)}

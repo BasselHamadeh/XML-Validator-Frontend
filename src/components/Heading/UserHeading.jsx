@@ -10,7 +10,7 @@ const Heading = () => {
                   textIndent: '20px',
                   marginTop: '-4px',
                   marginBottom: '4px' }}>
-      <h1>{t("xml_validator_view_view_user")}</h1>
+      <h1>{t("xml_validator_user_heading")}</h1>
     </div>
   );
 };

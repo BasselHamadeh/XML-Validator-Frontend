@@ -319,7 +319,7 @@ function XMLValidatorView() {
             onClick={handleClearXML}
             variant="outlined"
             startIcon={<DeleteIcon />}
-            style={{ textTransform: 'none', marginLeft: '70px', marginTop: '32px' }}
+            style={{ textTransform: 'none', marginLeft: '47px', marginTop: '30px' }}
           >
             {t('xml_validator_view_clear_files')}
           </Button>
@@ -328,9 +328,9 @@ function XMLValidatorView() {
           className="ValidateButton"
           onClick={handleValidateWithXSD}
           variant="contained"
-          style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '70px' }}
+          style={{ marginTop: '20px', textTransform: 'none', width: '180px', marginLeft: '47px' }}
         >
-          <VerifiedIcon style={{ marginRight: '10px' }} /> Validate
+          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate')}
         </Button>
         <Button
           className="ValidateButton"
@@ -338,7 +338,7 @@ function XMLValidatorView() {
           variant="contained"
           style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
         >
-          <VerifiedIcon style={{ marginRight: '10px' }} /> Validate Without XSD
+          <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate_without_xsd')}
         </Button>
         {isValidationSuccess ? (
           <Tooltip title={t('xml_validator_view_download')} arrow>

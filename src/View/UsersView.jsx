@@ -5,6 +5,7 @@ import UserHeading from '../components/Heading/UserHeading';
 import SearchBar from '../components/SearchBar';
 import UserTable from '../components/UserTable';
 import UserDetailsDialog from '../components/UserDetailsDialog';
+import { useTranslation } from 'react-i18next';
 
 const UsersView = () => {
   const [uploadedUsers, setUploadedUsers] = useState([]);
@@ -17,6 +18,7 @@ const UsersView = () => {
   const [loginDetailsDialogOpen, setLoginDetailsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [lastLoggedInUser, setLastLoggedInUser] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +80,7 @@ const UsersView = () => {
       const days = Math.floor(durationInMilliseconds / (1000 * 60 * 60 * 24));
       const hours = Math.floor((durationInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
-      return `${days > 0 ? days + " Tage " : ""}${hours > 0 ? hours + " Stunden " : ""}${minutes} Minuten`;
+      return `${days > 0 ? `${days} ${t(days === 1 ? 'xml_validator_user_days' : 'days')}` : ''}${hours > 0 ? `${hours} ${t(hours === 1 ? 'xml_validator_user_hours' : 'hours')}` : ''}${minutes} ${t('xml_validator_user_minute')}`;
     }
     return null;
   };
@@ -164,10 +166,10 @@ const UsersView = () => {
 
       {!serverNotStarted && lastLoggedInUser && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <h3 style={{ textDecoration: 'underline' }}>Aktuell eingeloggter Benutzer:</h3>
+          <h3 style={{ textDecoration: 'underline' }}>{t('xml_validator_user_logged_in')}</h3>
           <p style={{ color: '#04809c', fontWeight: 'bold', fontSize: '20px' }}>{lastLoggedInUser.username}</p>
           {sessionDuration && (
-            <p style={{ fontSize: '14px', color: '#888' }}>Angemeldet seit {sessionDuration}</p>
+            <p style={{ fontSize: '14px', color: '#888' }}>{t('xml_validator_user_duration')} {sessionDuration}</p>
           )}
         </div>
       )}

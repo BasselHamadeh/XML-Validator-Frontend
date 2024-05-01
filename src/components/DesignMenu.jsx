@@ -21,13 +21,13 @@ const DesignMenu = ({ onThemeChange }) => {
   return (
     <div style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '10px' }}>
       <Typography variant="body1" style={{fontWeight: 'bold', marginBottom: '10px', marginLeft: '-10px',}}>
-        {t('xml_validator_view_design')}
+        {t('xml_validator_design')}
       </Typography>
 
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Brightness4Icon style={{ marginRight: '5px' }} />
         <Typography variant="body1" style={{ marginRight: '10px' }}>
-          {t('xml_validator_view_dark_theme')}
+          {t('xml_validator_dark_theme')}
         </Typography>
         <Switch
           color="primary"
@@ -39,7 +39,7 @@ const DesignMenu = ({ onThemeChange }) => {
       <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
         <Brightness7Icon style={{ marginRight: '5px' }} />
         <Typography variant="body1" style={{ marginRight: '10px' }}>
-          {t('xml_validator_view_light_theme')}
+          {t('xml_validator_light_theme')}
         </Typography>
         <Switch
           color="primary"

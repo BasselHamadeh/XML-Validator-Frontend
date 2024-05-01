@@ -44,7 +44,6 @@ const ButtonAppBar = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   useEffect(() => {
-    // Setze das Theme beim ersten Rendern
     setTheme(localStorage.getItem('selectedTheme') || 'light');
   }, []);
 
@@ -90,7 +89,7 @@ const ButtonAppBar = () => {
               onClick={openDialog}
               style={{ color: theme === 'dark' ? '#fff' : 'inherit' }}
             >
-              {t('xml_validator_view_settings')}
+              {t('xml_validator_overview')}
             </Button>
             <OverviewDialog open={dialogOpen} onClose={closeDialog} onThemeChange={handleThemeChange} />
           </Toolbar>

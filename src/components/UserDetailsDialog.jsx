@@ -13,9 +13,11 @@ import {
   Typography,
   Box,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
   const totalLogins = loginDetails.filter((detail) => detail.email === selectedUser?.email).length;
+  const { t } = useTranslation();
 
   return (
     <DialogContent
@@ -41,15 +43,15 @@ const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
           <ListItemText
             primary={
               <Typography variant="h6" fontWeight="bold">
-                Login Details für {selectedUser?.username}
+                {t('xml_validator_user_login_details_for')} {selectedUser?.username}
               </Typography>
             }
             secondary={
               <Typography variant="subtitle1">
                 {totalLogins > 0 && (
-                  <>Gesamtanzahl der Logins: {totalLogins} </>
+                  <>{t('xml_validator_user_all_login')} {totalLogins} </>
                 )}
-                {totalLogins === 0 && <>Keine Login-Daten verfügbar</>}
+                {totalLogins === 0 && <>{t('xml_validator_user_no_login')}</>}
               </Typography>
             }
           />
@@ -65,7 +67,7 @@ const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
                 <ListItemText
                   primary={
                     <Typography>
-                      Datum: {detail.tag}.{detail.monat}.{detail.jahr} - Uhrzeit: {detail.uhrzeit}
+                      {t('xml_validator_user_date')} {detail.tag}.{detail.monat}.{detail.jahr} - {t('xml_validator_user_time')} {detail.uhrzeit}
                     </Typography>
                   }
                 />
@@ -79,10 +81,12 @@ const UserDetailsDialogContent = ({ loginDetails, selectedUser }) => {
 };
 
 const UserDetailsDialogActions = ({ onClose }) => {
+  const { t } = useTranslation();
+
   return (
     <DialogActions>
       <Button onClick={onClose} color="primary">
-        Schließen
+        {t('xml_validator_user_close')}
       </Button>
     </DialogActions>
   );

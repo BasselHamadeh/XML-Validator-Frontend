@@ -5,6 +5,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'react-i18next';
 
 const StyledAlertContainer = styled('div')({
   display: 'flex',
@@ -42,6 +43,8 @@ const StyledRefreshButton = styled(IconButton)({
 });
 
 const ServerNotStartedAlert = ({ isServerStarting, onRefresh }) => {
+  const { t } = useTranslation();
+
   const handleRefreshClick = () => {
     onRefresh && onRefresh();
     window.location.reload(true);
@@ -51,10 +54,10 @@ const ServerNotStartedAlert = ({ isServerStarting, onRefresh }) => {
     <StyledAlertContainer>
       <StyledIcon />
       <StyledAlertText variant="h6" gutterBottom>
-        Oops! Es scheint, dass der Server nicht läuft.
+        {t('xml_validator_user_server_error')}
       </StyledAlertText>
       <StyledAlertText variant="body1" paragraph>
-        Bitte starten Sie den Server und klicken Sie auf "Aktualisieren", wenn Sie fertig sind.
+        {t('xml_validator_user_server_error_message')}
       </StyledAlertText>
       <StyledButtonContainer>
         <StyledRefreshButton onClick={handleRefreshClick} disabled={isServerStarting}>

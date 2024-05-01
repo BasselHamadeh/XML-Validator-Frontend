@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import WarningIcon from '@mui/icons-material/Warning';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 function XSDDropdown({ onSelectXSD }) {
@@ -18,6 +19,7 @@ function XSDDropdown({ onSelectXSD }) {
   const [showLoading, setShowLoading] = useState(true);
   const [dropdownClicked, setDropdownClicked] = useState(false);
   const [errorDisplayed, setErrorDisplayed] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,10 +127,10 @@ function XSDDropdown({ onSelectXSD }) {
             </IconButton>
             <WarningIcon fontSize="large" style={{ color: '#f44336', marginBottom: '10px' }} />
             <Typography variant="h5" style={{ color: '#f44336', textAlign: 'center', marginBottom: '10px' }}>
-              Server Error
+              {t('xml_validator_dropdown_server_error')}
             </Typography>
             <Typography style={{ color: '#000', textAlign: 'center', marginBottom: '4px' }}>
-              Keine XSD-Dateien vorhanden. Starte den Server, um XSD-Dateien zu erhalten.
+              {t('xml_validator_dropdown_error')}
             </Typography>
           </React.Fragment>
         )}

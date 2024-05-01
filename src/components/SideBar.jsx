@@ -12,10 +12,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useTranslation } from 'react-i18next';
 import Settings from './Settings';
 
 function SideBar({ open, onClose, onThemeChange }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleHomeClick = () => {
     onClose();
@@ -38,6 +41,12 @@ function SideBar({ open, onClose, onThemeChange }) {
       onClose();
     }
   };
+
+  const handleLogoutClick = () => {
+    window.close();
+    window.location.href = 'about:blank';
+  };
+  
 
   const list = () => (
     <Box
@@ -74,17 +83,23 @@ function SideBar({ open, onClose, onThemeChange }) {
           </ListItemButton>
         </ListItem>
         <hr style={{ width: '80%', margin: '10px auto' }} />
-        <div style={{ marginTop: 'auto' }}>
-          <ListItem key="Settings" disablePadding>
-            <ListItemButton onClick={handleSettingsClick}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItemButton>
-          </ListItem>
-        </div>
+        <ListItem key="Settings" disablePadding>
+          <ListItemButton onClick={handleSettingsClick}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItemButton>
+        </ListItem>
       </List>
+      <ListItem key="Logout" disablePadding>
+        <ListItemButton onClick={handleLogoutClick}>
+          <ListItemIcon>
+            <ExitToAppIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('xml_validator_sidebar_exit')} />
+        </ListItemButton>
+      </ListItem>
     </Box>
   );
 

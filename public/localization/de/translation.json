@@ -1,47 +1,78 @@
 {
-    "xml_validator_view_selected_file": "Ausgewählte Datei: {{fileName}}",
-    "xml_validator_view_no_file_selected": "keine ausgewählte Datei",
-    "xml_validator_view_invalid_file": "Ungültige Datei ausgewählt. Bitte wählen Sie eine XML-Datei aus.",
-    "xml_validator_view_xml_validator": "XML Validator",
-    "xml_validator_view_upload_xml_files": "Laden Sie XML-Dateien hoch und führen Sie Validierungen durch",
+    "xml_validator_view_heading": "XML-Validierer",
+    "xml_validator_user_heading": "Benutzer-Dashboard",
+
+        
+    "xml_validator_view_selected_file": "ausgewählte Datei: {{fileName}}",
     "xml_validator_view_select_file": "Datei auswählen",
-    "xml_validator_view_clear_files": "Leeren",
-    "xml_validator_view_validate": "Validieren",
-    "xml_validator_view_upload_xsd_files": "Laden Sie XSD-Schemadateien hoch und nutzen Sie diese zur Validierung Ihrer XML-Daten",
-    "xml_validator_view_insert": "Einfügen",
-    "xml_validator_view_settings": "Übersicht",
-    "xml_validator_view_what_is_xml": "Was ist XML?",
-    "xml_validator_view_xml_description": "XML (eXtensible Markup Language) ist eine erweiterbare Auszeichnungssprache, die zur Darstellung und Strukturierung von Daten in einem formatierten Textformat verwendet wird.",
-    "xml_validator_view_what_is_xsd": "Was ist XSD?",
-    "xml_validator_view_xsd_description": "XSD (XML Schema Definition) ist eine standardisierte Sprache, die in XML verfasst ist und dazu dient, die Struktur und das Format von XML-Dokumenten festzulegen.",
-    "xml_validator_view_design_selection": "Designauswahl",
-    "xml_validator_view_dark_theme": "Dunkles Design",
-    "xml_validator_view_light_theme": "Helles Design",
+    "xml_validator_view_upload_xml_files": "Laden Sie XML-Dateien hoch und führen Sie Validierungen durch",
+    "xml_validator_view_insert_xml": "Einfügen",
     "xml_validator_view_insert_xml_file": "XML-Datei einfügen",
+    "xml_validator_view_no_file_selected": "keine Datei ausgewählt",
+    "xml_validator_view_upload_xsd_files": "Laden Sie XSD-Schemadateien hoch und verwenden Sie sie zur Validierung Ihrer XML-Daten",
+    "xml_validator_view_clear_files": "Leeren",
+    "xml_validator_view_insert_xsd": "Einfügen",
     "xml_validator_view_insert_xsd_file": "XSD-Datei einfügen",
-    "xml_validator_view_drag_and_drop_prompt_xml": "Drag and drop an XML file here",
-    "xml_validator_view_drag_and_drop_prompt_xsd": "Drag and drop an XSD file here",
-    "xml_validator_view_drag_drop_xml": "Es ist nur möglich, XML-Dateien in das XML-Textfeld einzufügen",
-    "xml_validator_view_drag_drop_xsd": "Es ist nur möglich, XSD-Dateien in das XSD-Textfeld einzufügen",    
-    "xml_validator_view_design": "Designthema",
-    "xml_validator_view_home": "Home",
-    "xml_validator_view_user": "Benutzer",
-    "xml_validator_view_downloads": "Downloads",
-    "xml_validator_view_logout": "Ausloggen",
-    "xml_validator_view_name": "Benutzername",
-    "xml_validator_view_email": "Email",
-    "xml_validator_view_role": "Rolle",
-    "xml_validator_view_group": "Gruppe",
-    "xml_validator_view_password": "Passwort (verschlüsselt)",
-    "xml_validator_view_view_user": "Benutzer Dashboard",
-    "xml_validator_view_actions": "verwalten",
-    "xml_validator_view_validate_without_xsd": "Validieren ohne XSD",
-    "xml_validator_view_setting": "Einstellungen",
-    "xml_validator_view_login_details": "Details",
-    "xml_validator_view_language": "Sprache",
-    "xml_validator_view_englisch": "Englisch",
-    "xml_validator_view_german": "Deutsch",
-    "xml_validator_view_setting_save": "Einstellungen speichern",
-    "xml_validator_view_validation_success": "Validierung erfolgreich",
-    "xml_validator_view_download": "Herunterladen"
-  }
+    "xml_validator_view_invalid_file": "Ungültige Datei ausgewählt. Bitte wählen Sie eine XML-Datei aus.",
+    "xml_validator_view_drag_drop_xml": "Nur XML-Dateien können in das XML-Textfeld eingefügt werden.",
+    "xml_validator_view_drag_drop_xsd": "Nur XSD-Dateien können in das XSD-Textfeld eingefügt werden.",
+    "xml_validator_view_validate": "XML validieren",
+    "xml_validator_view_validate_without_xsd": "Ohne XSD validieren",
+    "xml_validator_view_download": "Herunterladen",
+
+    
+    "xml_validator_dropdown_server_error": "Serverfehler",
+    "xml_validator_dropdown_error": "Keine XSD-Dateien verfügbar. Starten Sie den Server, um XSD-Dateien zu erhalten.",
+        
+
+    "xml_validator_overview": "Übersicht",
+    "xml_validator_what_is_xml": "Was ist XML?",
+    "xml_validator_xml_description": "XML (eXtensible Markup Language) ist eine erweiterbare Auszeichnungssprache, die verwendet wird, um Daten in einem formatierten Textformat darzustellen und zu strukturieren.",
+    "xml_validator_what_is_xsd": "Was ist XSD?",
+    "xml_validator_xsd_description": "XSD (XML Schema Definition) ist eine standardisierte Sprache, die in XML geschrieben ist und dazu verwendet wird, die Struktur und das Format von XML-Dokumenten festzulegen.",
+    
+
+    "xml_validator_design": "Designthema",
+    "xml_validator_dark_theme": "Dunkles Design",
+    "xml_validator_light_theme": "Helles Design",
+    
+
+    "xml_validator_user_username": "Benutzername",
+    "xml_validator_user_search_placeholder": "Suche . . .",
+    "xml_validator_user_server_error": "Hoppla! Es scheint, dass der Server nicht läuft.",
+    "xml_validator_user_server_error_message": "Starten Sie den Server und klicken Sie auf Aktualisieren, wenn Sie fertig sind.",
+    "xml_validator_user_duration": "registriert seit: ",
+    "xml_validator_user_logged_in": "Derzeit angemeldeter Benutzer: ",
+    
+
+    "xml_validator_setting": "Einstellungen",
+    "xml_validator_setting_language": "Sprache",
+    "xml_validator_setting_englisch": "Englisch",
+    "xml_validator_setting_german": "Deutsch",
+    "xml_validator_setting_save": "Einstellungen speichern",
+
+
+    "xml_validator_sidebar_exit": "Beenden",
+
+
+    "xml_validator_user_login_details_for": "Anmeldeinformationen für ",
+    "xml_validator_user_all_login": "Gesamtzahl der Anmeldungen: ",
+    "xml_validator_user_no_login": "Keine Anmeldeinformationen verfügbar",
+    "xml_validator_user_date": "Datum",
+    "xml_validator_user_time": "Uhrzeit",
+    "xml_validator_user_close": "Schließen",
+    
+
+    "xml_validator_user_id": "ID",
+    "xml_validator_user_name": "Name",
+    "xml_validator_user_email": "E-Mail",
+    "xml_validator_user_role": "Rolle",
+    "xml_validator_user_team": "Sicherheitsgruppe",
+    "xml_validator_user_password": "Passwort",
+    "xml_validator_user_login_details": "Anmeldeinformationen",
+    "xml_validator_user_no_data": "Keine Daten verfügbar",
+    "xml_validator_user_show_details": "Details anzeigen",
+    "xml_validator_user_days": "Tage ",
+    "xml_validator_user_hours": "Stunden ",
+    "xml_validator_user_minute": "Minuten"
+}
