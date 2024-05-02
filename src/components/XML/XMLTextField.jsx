@@ -16,7 +16,7 @@ function XMLTextInput({ value, onChange, rows }) {
             onChange={onChange}
             rows={rows}
             style={{
-              width: '95%',
+              width: '94%',
               height: '452px',
               marginTop: '25px',
               marginLeft: "27px",

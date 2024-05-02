@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -15,10 +15,30 @@ import { Link } from 'react-router-dom';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useTranslation } from 'react-i18next';
 import Settings from './Settings';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 function SideBar({ open, onClose, onThemeChange }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    // Fetch user data from localhost:8080/login
+    fetch('http://localhost:8080/login')
+      .then(response => response.json())
+      .then(data => {
+        // Check if the last entry has the security group 'Administrators'
+        const lastEntry = data[data.length - 1];
+        if (lastEntry && lastEntry.gruppe === 'Administratoren') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
+      });
+  }, []);
 
   const handleHomeClick = () => {
     onClose();
@@ -46,7 +66,6 @@ function SideBar({ open, onClose, onThemeChange }) {
     window.close();
     window.location.href = 'about:blank';
   };
-  
 
   const list = () => (
     <Box
@@ -74,15 +93,31 @@ function SideBar({ open, onClose, onThemeChange }) {
           </ListItemButton>
         </ListItem>
         <hr style={{ width: '80%', margin: '10px auto' }} />
-        <ListItem key="User" disablePadding>
-          <ListItemButton component={Link} to="/user">
-            <ListItemIcon>
-              <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="User" />
-          </ListItemButton>
-        </ListItem>
-        <hr style={{ width: '80%', margin: '10px auto' }} />
+        {isAdmin ? (
+          <>
+            <ListItem key="User" disablePadding>
+              <ListItemButton component={Link} to="/user">
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="User" />
+              </ListItemButton>
+            </ListItem>
+            <hr style={{ width: '80%', margin: '10px auto' }} />
+          </>
+        ) : (
+          <>
+            <ListItem key="AccountManagement" disablePadding>
+              <ListItemButton component={Link} to="/useradministrate">
+                <ListItemIcon>
+                  <AdminPanelSettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Account verwalten" />
+              </ListItemButton>
+            </ListItem>
+            <hr style={{ width: '80%', margin: '10px auto' }} />
+          </>
+        )}
         <ListItem key="Settings" disablePadding>
           <ListItemButton onClick={handleSettingsClick}>
             <ListItemIcon>

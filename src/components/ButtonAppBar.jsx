@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ViewCompactSharpIcon from '@mui/icons-material/ViewCompactSharp';
 import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import SideBar from './SideBar';
@@ -42,9 +43,30 @@ const ButtonAppBar = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('selectedTheme') || 'light');
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [lastLoggedInUser, setLastLoggedInUser] = useState('');
 
   useEffect(() => {
-    setTheme(localStorage.getItem('selectedTheme') || 'light');
+    const fetchLoginDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/login');
+        if (response.ok) {
+          const details = await response.json();
+          if (details.length > 0) {
+            const lastLogin = details.reduce((prev, current) =>
+              new Date(current.jahr, current.monat - 1, current.tag, ...current.uhrzeit.split(':')) >
+              new Date(prev.jahr, prev.monat - 1, prev.tag, ...prev.uhrzeit.split(':'))
+                ? current
+                : prev
+            );
+            setLastLoggedInUser(lastLogin.username);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching login details:', error.message);
+      }
+    };
+
+    fetchLoginDetails();
   }, []);
 
   const openDialog = () => {
@@ -81,8 +103,16 @@ const ButtonAppBar = () => {
             >
               <MenuIcon />
             </IconButton>
-
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}></Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            {lastLoggedInUser && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <AccountCircleIcon sx={{ mr: 1 }} />
+                <Typography variant="body1">
+                  {lastLoggedInUser}
+                </Typography>
+              </Box>
+            )}
+            <Box sx={{ flexGrow: 1 }} />
             <Button
               color="inherit"
               startIcon={<ViewCompactSharpIcon />}
