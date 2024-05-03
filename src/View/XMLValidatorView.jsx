@@ -292,11 +292,11 @@ function XMLValidatorView() {
   };
 
   return (
-    <Grid container spacing={3} className="Body" onDragOver={handleDragOver}>
+    <Grid container spacing={3} className="Body" style={{ position: 'relative', minHeight: '100vh' }} onDragOver={handleDragOver}>
       <Grid item xs={12}>
         <ButtonAppBar title="XML Validator View" />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} style={{ position: 'relative' }}>
         <XMLContainer
           onFileSelect={handleFileSelectXML}
           selectedFileName={selectedXMLFileName}
@@ -336,7 +336,7 @@ function XMLValidatorView() {
           className="ValidateButton"
           onClick={handleValidateWithoutXSD}
           variant="contained"
-          style={{ marginTop: '20px', textTransform: 'none', width: '220px', marginLeft: '20px' }}
+          style={{ marginTop: '20px', textTransform: 'none', width: '210px', marginLeft: '20px' }}
         >
           <VerifiedIcon style={{ marginRight: '10px' }} /> {t('xml_validator_view_validate_without_xsd')}
         </Button>
@@ -351,11 +351,11 @@ function XMLValidatorView() {
             </IconButton>
           </Tooltip>
         ) : (
-          <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
+          <Grid style={{ position: 'absolute', bottom: -15, left: '104%', transform: 'translateX(-50%)', width: '100%', textAlign: 'center' }}>
             {validationErrors.length > 0 && (
               <ErrorTextField errors={validationErrors} onClose={handleSnackbarClose} />
             )}
-          </div>
+          </Grid>
         )}
       </Grid>
       <Grid item xs={6}>

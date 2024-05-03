@@ -16,20 +16,19 @@ function ErrorTextField({ errors }) {
       }}
     >
       <Paper
-        elevation={3}
         style={{
           fontSize: '14px',
-          maxHeight: '110px',
-          overflowY: 'auto',
-          width: '100%',
           maxWidth: '700px',
-          padding: '15px',
-          display: 'flex',
+          width: '600px',
+          padding: '10px',
+          marginLeft: '30px',
+          maxHeight: '80px',
+          marginBottom: '-20px'
         }}
       >
         {errorArray.map((error, index) => (
-          <div key={index} style={{ whiteSpace: 'pre-line', cursor: 'pointer', marginBottom: '5px' }}>
-            <Typography variant="body1" style={{ fontWeight: 'bold', color: '#000000', fontSize: '15px', textAlign: 'left' }}>
+          <div key={index} style={{ whiteSpace: 'pre-line', cursor: 'pointer' }}>
+            <Typography variant="body1" style={{ fontWeight: 'bold', color: '#000000', fontSize: '14px' }}>
               {error.success === false ? error.errors[2] : error.message || error}
             </Typography>
           </div>
