@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { IconButton, InputAdornment, Paper, Snackbar } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Alert from '@mui/material/Alert';
 
 function UserAdministration() {
   const [username, setUsername] = useState('');
@@ -19,25 +20,8 @@ function UserAdministration() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const fetchUserData = () => {
-    fetch('http://localhost:8080/login')
-      .then(response => response.json())
-      .then(data => {
-        const lastEntry = data[data.length - 1];
-        if (lastEntry) {
-          setUsername(lastEntry.username);
-          setEmail(lastEntry.email);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      });
-  };
+  const [errorMessage, setErrorMessage] = useState('');
+  const [userId, setUserId] = useState(null);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -50,13 +34,14 @@ function UserAdministration() {
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
     setPassword(newPassword);
-    // Validierung des Passworts
     const isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/.test(newPassword);
-    setPasswordError(!isValidPassword);
+    setPasswordError(!isValidPassword || newPassword !== passwordConfirmation);
   };
 
   const handlePasswordConfirmationChange = (event) => {
-    setPasswordConfirmation(event.target.value);
+    const confirmPassword = event.target.value;
+    setPasswordConfirmation(confirmPassword);
+    setPasswordError(confirmPassword !== password);
   };
 
   const togglePasswordVisibility = () => {
@@ -67,40 +52,67 @@ function UserAdministration() {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  useEffect(() => {
+    fetchLoggedInUser();
+    fetchUserId();
+  }, []);
+
+  const fetchLoggedInUser = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/login');
+      const data = await response.json();
+      const lastLoggedInUser = data[data.length - 1];
+      if (lastLoggedInUser) {
+        setUsername(lastLoggedInUser.username);
+        setEmail(lastLoggedInUser.email);
+      }
+    } catch (error) {
+      console.error('Error fetching logged-in user:', error);
+    }
+  };
+
+  const fetchUserId = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/user');
+      const data = await response.json();
+      const lastUser = data[data.length - 1];
+      if (lastUser) {
+        setUserId(lastUser.id);
+      }
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    // Validierung der Eingaben
-    if (password !== passwordConfirmation || passwordError) {
-      setPasswordError(true);
-      setLoading(false);
-      setTimeout(() => {
-        setPasswordError(false);
-      }, 5000);
-      return;
-    }
-    
+  
     try {
-      const response = await fetch('http://localhost:8080/user/update', {
+      const response = await fetch(`http://localhost:8080/updatePassword/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({
+          newPassword: password,
+        }),
       });
+  
+      const data = await response.json();
+  
       if (response.ok) {
-        const data = await response.json();
         setUpdateSuccess(true);
-        setLoading(false);
-        console.log('Benutzerdaten erfolgreich aktualisiert:', data);
       } else {
-        throw new Error('Fehler beim Aktualisieren der Benutzerdaten');
+        setErrorMessage(data.message);
       }
     } catch (error) {
-      console.error('Fehler:', error);
+      console.error('Error updating password:', error.message);
+      setErrorMessage('Fehler beim Aktualisieren des Passworts');
+    } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div>
@@ -113,9 +125,14 @@ function UserAdministration() {
             </Typography>
             {loading && <CircularProgress style={{ marginBottom: 20 }} />}
             {updateSuccess && (
-              <Typography variant="body1" style={{ marginBottom: 20, color: 'green' }}>
+              <Alert severity="success" style={{ marginBottom: 20 }}>
                 Profil erfolgreich aktualisiert!
-              </Typography>
+              </Alert>
+            )}
+            {errorMessage && (
+              <Alert severity="error" style={{ marginBottom: 20 }}>
+                {errorMessage}
+              </Alert>
             )}
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>

@@ -80,7 +80,7 @@ const UsersView = () => {
       const days = Math.floor(durationInMilliseconds / (1000 * 60 * 60 * 24));
       const hours = Math.floor((durationInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
-      return `${days > 0 ? `${days} ${t(days === 1 ? 'xml_validator_user_days' : 'xml_validator_user_day')}` : ''}${hours > 0 ? `${hours} ${t(hours === 1 ? 'xml_validator_user_hours' : 'xml_validator_user_hours')}` : ''}${minutes} ${t('xml_validator_user_minute')}`;
+      return `${days > 0 ? `${days} ${t(days === 1 ? 'xml_validator_user_days' : 'xml_validator_user_days')}` : ''}${hours > 0 ? `${hours} ${t(hours === 1 ? 'xml_validator_user_hours' : 'xml_validator_user_hours')}` : ''}${minutes} ${t('xml_validator_user_minute')}`;
     }
     return null;
   };
