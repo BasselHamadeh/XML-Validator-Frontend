@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonAppBar from './ButtonAppBar';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { IconButton, InputAdornment, Paper, Snackbar } from '@mui/material';
+import { IconButton, InputAdornment, Paper } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
@@ -20,8 +20,27 @@ function UserAdministration() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState(null);
+
+  const validateForm = useCallback(() => {
+    setUsernameError(username.length === 0);
+    setEmailError(!/^\S+@\S+\.\S+$/.test(email));
+    setPasswordError(
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/.test(password) ||
+        password !== passwordConfirmation
+    );
+  }, [username, email, password, passwordConfirmation]);
+
+  useEffect(() => {
+    document.title = 'XML Validator | Profile Management';
+  }, []);
+
+  useEffect(() => {
+    validateForm();
+  }, [username, email, password, passwordConfirmation, validateForm]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -34,14 +53,13 @@ function UserAdministration() {
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
     setPassword(newPassword);
-    const isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/.test(newPassword);
-    setPasswordError(!isValidPassword || newPassword !== passwordConfirmation);
+    validateForm();
   };
 
   const handlePasswordConfirmationChange = (event) => {
     const confirmPassword = event.target.value;
     setPasswordConfirmation(confirmPassword);
-    setPasswordError(confirmPassword !== password);
+    validateForm();
   };
 
   const togglePasswordVisibility = () => {
@@ -89,12 +107,14 @@ function UserAdministration() {
     setLoading(true);
   
     try {
-      const response = await fetch(`http://localhost:8080/updatePassword/${userId}`, {
+      const response = await fetch(`http://localhost:8080/updateProfile/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username,
+          email,
           newPassword: password,
         }),
       });
@@ -103,16 +123,30 @@ function UserAdministration() {
   
       if (response.ok) {
         setUpdateSuccess(true);
+        setUsernameError(false);
+        setEmailError(false);
+        setPasswordError(false);
+        setErrorMessage('');
       } else {
         setErrorMessage(data.message);
       }
     } catch (error) {
-      console.error('Error updating password:', error.message);
-      setErrorMessage('Fehler beim Aktualisieren des Passworts');
+      console.error('Error updating profile:', error.message);
+      setErrorMessage('Fehler beim Aktualisieren des Profils');
     } finally {
       setLoading(false);
     }
   };  
+
+  useEffect(() => {
+    if (updateSuccess || errorMessage) {
+      const timer = setTimeout(() => {
+        setUpdateSuccess(false);
+        setErrorMessage('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [updateSuccess, errorMessage]);
 
   return (
     <div>
@@ -124,7 +158,7 @@ function UserAdministration() {
               Profilverwaltung
             </Typography>
             {loading && <CircularProgress style={{ marginBottom: 20 }} />}
-            {updateSuccess && (
+            {updateSuccess && !errorMessage && (
               <Alert severity="success" style={{ marginBottom: 20 }}>
                 Profil erfolgreich aktualisiert!
               </Alert>
@@ -144,6 +178,8 @@ function UserAdministration() {
                     fullWidth
                     value={username}
                     onChange={handleUsernameChange}
+                    error={usernameError}
+                    helperText={usernameError && "Benutzername erforderlich"}
                     InputProps={{ style: { backgroundColor: 'white' } }}
                   />
                 </Grid>
@@ -155,6 +191,8 @@ function UserAdministration() {
                     fullWidth
                     value={email}
                     onChange={handleEmailChange}
+                    error={emailError}
+                    helperText={emailError && "Ungültige E-Mail-Adresse"}
                     InputProps={{ style: { backgroundColor: 'white' } }}
                   />
                 </Grid>
@@ -167,6 +205,11 @@ function UserAdministration() {
                     fullWidth
                     value={password}
                     onChange={handlePasswordChange}
+                    error={passwordError}
+                    helperText={
+                      passwordError &&
+                      "Das Passwort muss zwischen 6 und 20 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen enthalten."
+                    }
                     InputProps={{
                       style: { backgroundColor: 'white' },
                       endAdornment: (
@@ -177,7 +220,6 @@ function UserAdministration() {
                         </InputAdornment>
                       ),
                     }}
-                    error={passwordError}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -189,6 +231,8 @@ function UserAdministration() {
                     fullWidth
                     value={passwordConfirmation}
                     onChange={handlePasswordConfirmationChange}
+                    error={passwordError}
+                    helperText={passwordError && "Passwörter stimmen nicht überein"}
                     InputProps={{
                       style: { backgroundColor: 'white' },
                       endAdornment: (
@@ -199,12 +243,6 @@ function UserAdministration() {
                         </InputAdornment>
                       ),
                     }}
-                    error={passwordError}
-                  />
-                  <Snackbar
-                    open={passwordError}
-                    autoHideDuration={5000}
-                    message="Das Passwort entspricht nicht den Anforderungen"
                   />
                 </Grid>
                 <Grid item>
@@ -212,7 +250,7 @@ function UserAdministration() {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={loading || passwordError}
+                    disabled={loading || passwordError || emailError || usernameError}
                   >
                     {loading ? 'Speichern...' : 'Speichern'}
                   </Button>
