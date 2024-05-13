@@ -28,9 +28,11 @@ function UserAdministration() {
   const validateForm = useCallback(() => {
     setUsernameError(username.length === 0);
     setEmailError(!/^\S+@\S+\.\S+$/.test(email));
+    
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/;
+    const isPasswordValid = passwordPattern.test(password);
     setPasswordError(
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/.test(password) ||
-        password !== passwordConfirmation
+      (password.length > 0 && !isPasswordValid) || password !== passwordConfirmation
     );
   }, [username, email, password, passwordConfirmation]);
 
@@ -206,10 +208,6 @@ function UserAdministration() {
                     value={password}
                     onChange={handlePasswordChange}
                     error={passwordError}
-                    helperText={
-                      passwordError &&
-                      "Das Passwort muss zwischen 6 und 20 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen enthalten."
-                    }
                     InputProps={{
                       style: { backgroundColor: 'white' },
                       endAdornment: (
@@ -221,6 +219,11 @@ function UserAdministration() {
                       ),
                     }}
                   />
+                  {passwordError && (
+                    <Typography variant="body2" color="error" style={{ marginTop: 4 }}>
+                      Das Passwort muss zwischen 6 und 20 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen enthalten.
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -232,7 +235,6 @@ function UserAdministration() {
                     value={passwordConfirmation}
                     onChange={handlePasswordConfirmationChange}
                     error={passwordError}
-                    helperText={passwordError && "Passwörter stimmen nicht überein"}
                     InputProps={{
                       style: { backgroundColor: 'white' },
                       endAdornment: (
@@ -244,6 +246,11 @@ function UserAdministration() {
                       ),
                     }}
                   />
+                  {passwordError && (
+                    <Typography variant="body2" color="error" style={{ marginTop: 4 }}>
+                      Passwörter stimmen nicht überein
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid item>
                   <Button
