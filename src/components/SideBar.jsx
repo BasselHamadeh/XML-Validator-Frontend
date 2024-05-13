@@ -23,13 +23,11 @@ function SideBar({ open, onClose, onThemeChange }) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Fetch user data from localhost:8080/login
     fetch('http://localhost:8080/login')
       .then(response => response.json())
       .then(data => {
-        // Check if the last entry has the security group 'Administrators'
-        const lastEntry = data[data.length - 1];
-        if (lastEntry && lastEntry.gruppe === 'Administratoren') {
+        const latestLogin = data[data.length - 1];
+        if (latestLogin && latestLogin.gruppe === 'Administratoren') {
           setIsAdmin(true);
         } else {
           setIsAdmin(false);
