@@ -38,7 +38,7 @@ const SearchBar = ({ handleSearchChange }) => {
         }}
         autoComplete="off"
       />
-      <FormControl sx={{ width: '8%', marginTop: '10px', borderRadius: '4px', backgroundColor: 'white' }}>
+      <FormControl sx={{ width: '17%', marginTop: '10px', borderRadius: '4px', backgroundColor: 'white' }}>
         <Select
           labelId="search-category-label"
           id="search-category"
@@ -47,8 +47,8 @@ const SearchBar = ({ handleSearchChange }) => {
           sx={{ '&:before': { borderBottomColor: '#04809c' } }}
         >
           <InputLabel id="search-category-label" sx={{ color: '#04809c', position: 'absolute', top: -8, left: 8, pointerEvents: 'none' }}></InputLabel>
-          <MenuItem value="username">{t('xml_validator_user_username')}</MenuItem>
-          <MenuItem value="email">{t('xml_validator_user_email')}</MenuItem>
+            <MenuItem value="username">{t('xml_validator_user_username')}</MenuItem>
+            <MenuItem value="email">{t('xml_validator_user_email')}</MenuItem>
         </Select>
       </FormControl>
     </div>

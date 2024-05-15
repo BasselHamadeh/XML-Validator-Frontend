@@ -345,7 +345,7 @@ function XMLValidatorView() {
             <IconButton
               className="DownloadButton"
               onClick={handleDownloadXML}
-              style={{ marginTop: '20px', marginLeft: '20px', color: '#04809c' }}
+              style={{ marginTop: '20px', marginLeft: '30px', color: '#04809c' }}
             >
               <GetAppIcon />
             </IconButton>

@@ -87,7 +87,7 @@ function SideBar({ open, onClose, onThemeChange }) {
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary="Home" />
+            <ListItemText primary={t('xml_validator_sidebar_home')} />
           </ListItemButton>
         </ListItem>
         <hr style={{ width: '80%', margin: '10px auto' }} />
@@ -98,7 +98,7 @@ function SideBar({ open, onClose, onThemeChange }) {
                 <ListItemIcon>
                   <PersonIcon />
                 </ListItemIcon>
-                <ListItemText primary="User" />
+                <ListItemText primary={t('xml_validator_sidebar_user')} />
               </ListItemButton>
             </ListItem>
             <hr style={{ width: '80%', margin: '10px auto' }} />
@@ -110,7 +110,7 @@ function SideBar({ open, onClose, onThemeChange }) {
                 <ListItemIcon>
                   <AdminPanelSettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Account verwalten" />
+                <ListItemText primary={t('xml_validator_sidebar_manage_account')} />
               </ListItemButton>
             </ListItem>
             <hr style={{ width: '80%', margin: '10px auto' }} />
@@ -121,7 +121,7 @@ function SideBar({ open, onClose, onThemeChange }) {
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary="Settings" />
+            <ListItemText primary={t('xml_validator_sidebar_settings')} />
           </ListItemButton>
         </ListItem>
       </List>

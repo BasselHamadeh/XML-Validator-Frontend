@@ -23,7 +23,8 @@ function ErrorTextField({ errors }) {
           padding: '10px',
           marginLeft: '30px',
           maxHeight: '80px',
-          marginBottom: '-20px'
+          marginBottom: '-140px',
+          border: '1px solid #04809c'
         }}
       >
         {errorArray.map((error, index) => (

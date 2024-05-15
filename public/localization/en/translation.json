@@ -9,7 +9,7 @@
     "xml_validator_view_insert_xml": "Insert",
     "xml_validator_view_insert_xml_file": "Insert XML file",
     "xml_validator_view_no_file_selected": "no file selected",
-    "xml_validator_view_upload_xsd_files": "Upload XSD schema files and use them to validate your XML data",
+    "xml_validator_view_upload_xsd_files": "Upload XSD schema files to validate XML data",
     "xml_validator_view_clear_files": "To empty",
     "xml_validator_view_insert_xsd": "Insert",
     "xml_validator_view_insert_xsd_file": "Insert XSD file",
@@ -52,6 +52,10 @@
     "xml_validator_setting_save": "Save settings",
 
     
+    "xml_validator_sidebar_home": "Home",
+    "xml_validator_sidebar_user": "User",
+    "xml_validator_sidebar_settings": "Settings",
+    "xml_validator_sidebar_manage_account": "Manage Account",
     "xml_validator_sidebar_exit": "Exit",
 
 

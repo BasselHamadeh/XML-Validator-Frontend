@@ -9,7 +9,7 @@
     "xml_validator_view_insert_xml": "Einfügen",
     "xml_validator_view_insert_xml_file": "XML-Datei einfügen",
     "xml_validator_view_no_file_selected": "keine Datei ausgewählt",
-    "xml_validator_view_upload_xsd_files": "Laden Sie XSD-Schemadateien hoch und verwenden Sie sie zur Validierung Ihrer XML-Daten",
+    "xml_validator_view_upload_xsd_files": "Lade XSD-Schemas hoch, um deine XML-Daten zu validieren",
     "xml_validator_view_clear_files": "Leeren",
     "xml_validator_view_insert_xsd": "Einfügen",
     "xml_validator_view_insert_xsd_file": "XSD-Datei einfügen",
@@ -51,7 +51,10 @@
     "xml_validator_setting_german": "Deutsch",
     "xml_validator_setting_save": "Einstellungen speichern",
 
-
+    "xml_validator_sidebar_home": "Startseite",
+    "xml_validator_sidebar_user": "Benutzer",
+    "xml_validator_sidebar_manage_account": "Account verwalten",
+    "xml_validator_sidebar_settings": "Einstellungen",
     "xml_validator_sidebar_exit": "Beenden",
 
 
