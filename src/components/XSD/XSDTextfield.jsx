@@ -18,7 +18,7 @@ function XSDTextInput({ value, onChange, rows }) {
             readOnly
             style={{
               width: '95%',
-              height: '453px',
+              height: '373px',
               marginTop: '-32px',
               padding: '10px',
               border: '2px solid #04809c',
