@@ -9,6 +9,7 @@ import { IconButton, InputAdornment, Paper } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
+import { useTranslation } from 'react-i18next';
 
 function UserAdministration() {
   const [username, setUsername] = useState('');
@@ -22,8 +23,11 @@ function UserAdministration() {
   const [passwordError, setPasswordError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  const [emailTaken, setEmailTaken] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState(null);
+  const { t } = useTranslation();
 
   const validateForm = useCallback(() => {
     setUsernameError(username.length === 0);
@@ -107,7 +111,7 @@ function UserAdministration() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-  
+
     try {
       const response = await fetch(`http://localhost:8080/updateProfile/${userId}`, {
         method: 'PUT',
@@ -120,25 +124,36 @@ function UserAdministration() {
           newPassword: password,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setUpdateSuccess(true);
         setUsernameError(false);
         setEmailError(false);
         setPasswordError(false);
+        setUsernameTaken(false);
+        setEmailTaken(false);
         setErrorMessage('');
       } else {
-        setErrorMessage(data.message);
+        if (data.message === 'Benutzername bereits vergeben') {
+          setUsernameTaken(true);
+          setErrorMessage(t('xml_validator_account_username_taken'));
+        } else if (data.message === 'E-Mail-Adresse bereits vergeben') {
+          setEmailTaken(true);
+          setErrorMessage(t('xml_validator_account_email_taken'));
+        } else {
+          setErrorMessage(data.message);
+          console.log(data.message);
+        }
       }
     } catch (error) {
       console.error('Error updating profile:', error.message);
-      setErrorMessage('Fehler beim Aktualisieren des Profils');
+      setErrorMessage(t('xml_validator_account_errormessage'));
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     if (updateSuccess || errorMessage) {
@@ -157,12 +172,12 @@ function UserAdministration() {
         <Grid item xs={12} sm={8} md={6}>
           <Paper elevation={3} style={{ padding: 20 }}>
             <Typography variant="h5" gutterBottom style={{ marginBottom: 20 }}>
-              Profilverwaltung
+              {t('xml_validator_account_profile_management')}
             </Typography>
             {loading && <CircularProgress style={{ marginBottom: 20 }} />}
             {updateSuccess && !errorMessage && (
               <Alert severity="success" style={{ marginBottom: 20 }}>
-                Profil erfolgreich aktualisiert!
+                {t('xml_validator_account_profile_updated')}
               </Alert>
             )}
             {errorMessage && (
@@ -175,33 +190,39 @@ function UserAdministration() {
                 <Grid item xs={12}>
                   <TextField
                     id="username"
-                    label="Neuer Benutzername"
+                    label={t('xml_validator_account_new_username')}
                     variant="outlined"
                     fullWidth
                     value={username}
                     onChange={handleUsernameChange}
-                    error={usernameError}
-                    helperText={usernameError && "Benutzername erforderlich"}
+                    error={usernameError || usernameTaken}
+                    helperText={
+                      (usernameError && t('xml_validator_account_invalid_username')) ||
+                      (usernameTaken && t('xml_validator_account_username_taken'))
+                    }
                     InputProps={{ style: { backgroundColor: 'white' } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="email"
-                    label="Neue E-Mail"
+                    label={t('xml_validator_account_new_email')}
                     variant="outlined"
                     fullWidth
                     value={email}
                     onChange={handleEmailChange}
-                    error={emailError}
-                    helperText={emailError && "Ungültige E-Mail-Adresse"}
+                    error={emailError || emailTaken}
+                    helperText={
+                      (emailError && t('xml_validator_account_invalid_email')) ||
+                      (emailTaken && t('xml_validator_account_email_taken'))
+                    }
                     InputProps={{ style: { backgroundColor: 'white' } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="password"
-                    label="Neues Passwort"
+                    label={t('xml_validator_account_new_password')}
                     variant="outlined"
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
@@ -221,14 +242,14 @@ function UserAdministration() {
                   />
                   {passwordError && (
                     <Typography variant="body2" color="error" style={{ marginTop: 4 }}>
-                      Das Passwort muss zwischen 6 und 20 Zeichen lang sein und mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen enthalten.
+                      {t('xml_validator_account_password_criteria')}
                     </Typography>
                   )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id="passwordConfirmation"
-                    label="Passwort bestätigen"
+                    label={t('xml_validator_account_password_criteria_confirm')}
                     variant="outlined"
                     type={showConfirmPassword ? 'text' : 'password'}
                     fullWidth
@@ -248,7 +269,7 @@ function UserAdministration() {
                   />
                   {passwordError && (
                     <Typography variant="body2" color="error" style={{ marginTop: 4 }}>
-                      Passwörter stimmen nicht überein
+                      {t('xml_validator_account_password_dont_match')}
                     </Typography>
                   )}
                 </Grid>
@@ -257,9 +278,9 @@ function UserAdministration() {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={loading || passwordError || emailError || usernameError}
+                    disabled={loading || passwordError || emailError || usernameError || usernameTaken || emailTaken}
                   >
-                    {loading ? 'Speichern...' : 'Speichern'}
+                    {loading ? t('xml_validator_account_Saving...') : t('xml_validator_account_Save')}
                   </Button>
                 </Grid>
               </Grid>

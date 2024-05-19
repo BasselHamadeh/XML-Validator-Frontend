@@ -78,5 +78,22 @@
     "xml_validator_user_show_details": "Show Details",
     "xml_validator_user_days": "days ",
     "xml_validator_user_hours": "hours ",
-    "xml_validator_user_minute": "minutes"
+    "xml_validator_user_minute": "minutes",
+
+
+    "xml_validator_account_errormessage": "Error updating profile",
+    "xml_validator_account_profile_management": "Profile management",
+    "xml_validator_account_profile_updated": "Profile updated successfully!",
+    "xml_validator_account_new_username": "New username",
+    "xml_validator_account_invalid_username": "Username required",
+    "xml_validator_account_new_email": "new email",
+    "xml_validator_account_invalid_email": "Invalid e-mail address",
+    "xml_validator_account_new_password": "New Password",
+    "xml_validator_account_password_criteria": "Password: 6-20 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character.",
+    "xml_validator_account_password_criteria_confirm": "Confirm Password",
+    "xml_validator_account_password_dont_match": "Passwords do not match",
+    "xml_validator_account_Saving": "Save",
+    "xml_validator_account_Save": "Save",
+    "xml_validator_account_username_taken": "Username already taken!",
+    "xml_validator_account_email_taken": "Email already taken!"
 }

@@ -77,5 +77,22 @@
     "xml_validator_user_show_details": "Details anzeigen",
     "xml_validator_user_days": "Tage ",
     "xml_validator_user_hours": "Stunden ",
-    "xml_validator_user_minute": "Minuten "
+    "xml_validator_user_minute": "Minuten ",
+
+
+    "xml_validator_account_errormessage": "Fehler beim Aktualisieren des Profils",
+    "xml_validator_account_profile_management": "Profilverwaltung",
+    "xml_validator_account_profile_updated": "Profil erfolgreich aktualisiert!",
+    "xml_validator_account_new_username": "Neuer Benutzername",
+    "xml_validator_account_invalid_username": "Benutzername erforderlich",
+    "xml_validator_account_new_email": "Neue E-Mail",
+    "xml_validator_account_invalid_email": "Ungültige E-Mail-Adresse",
+    "xml_validator_account_new_password": "Neues Passwort",
+    "xml_validator_account_password_criteria": "Passwort: 6-20 Zeichen, mind. 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Ziffer, 1 Sonderzeichen.",
+    "xml_validator_account_password_criteria_confirm": "Passwort bestätigen",
+    "xml_validator_account_password_dont_match": "Passwörter stimmen nicht überein",
+    "xml_validator_account_Saving": "Speichern",
+    "xml_validator_account_Save": "Speichern",
+    "xml_validator_account_username_taken": "Benutzername bereits vergeben!",
+    "xml_validator_account_email_taken": "E-Mail-Adresse bereits vergeben!"
 }
