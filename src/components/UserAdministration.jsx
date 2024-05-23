@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 function UserAdministration() {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -21,24 +20,21 @@ function UserAdministration() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [usernameTaken, setUsernameTaken] = useState(false);
-  const [emailTaken, setEmailTaken] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState(null);
   const { t } = useTranslation();
 
   const validateForm = useCallback(() => {
     setUsernameError(username.length === 0);
-    setEmailError(!/^\S+@\S+\.\S+$/.test(email));
-    
+
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{6,20}$/;
     const isPasswordValid = passwordPattern.test(password);
     setPasswordError(
       (password.length > 0 && !isPasswordValid) || password !== passwordConfirmation
     );
-  }, [username, email, password, passwordConfirmation]);
+  }, [username, password, passwordConfirmation]);
 
   useEffect(() => {
     document.title = 'XML Validator | Profile Management';
@@ -46,14 +42,10 @@ function UserAdministration() {
 
   useEffect(() => {
     validateForm();
-  }, [username, email, password, passwordConfirmation, validateForm]);
+  }, [username, password, passwordConfirmation, validateForm]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -88,7 +80,6 @@ function UserAdministration() {
       const lastLoggedInUser = data[data.length - 1];
       if (lastLoggedInUser) {
         setUsername(lastLoggedInUser.username);
-        setEmail(lastLoggedInUser.email);
       }
     } catch (error) {
       console.error('Error fetching logged-in user:', error);
@@ -120,7 +111,6 @@ function UserAdministration() {
         },
         body: JSON.stringify({
           username,
-          email,
           newPassword: password,
         }),
       });
@@ -130,18 +120,13 @@ function UserAdministration() {
       if (response.ok) {
         setUpdateSuccess(true);
         setUsernameError(false);
-        setEmailError(false);
         setPasswordError(false);
         setUsernameTaken(false);
-        setEmailTaken(false);
         setErrorMessage('');
       } else {
         if (data.message === 'Benutzername bereits vergeben') {
           setUsernameTaken(true);
           setErrorMessage(t('xml_validator_account_username_taken'));
-        } else if (data.message === 'E-Mail-Adresse bereits vergeben') {
-          setEmailTaken(true);
-          setErrorMessage(t('xml_validator_account_email_taken'));
         } else {
           setErrorMessage(data.message);
           console.log(data.message);
@@ -205,22 +190,6 @@ function UserAdministration() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    id="email"
-                    label={t('xml_validator_account_new_email')}
-                    variant="outlined"
-                    fullWidth
-                    value={email}
-                    onChange={handleEmailChange}
-                    error={emailError || emailTaken}
-                    helperText={
-                      (emailError && t('xml_validator_account_invalid_email')) ||
-                      (emailTaken && t('xml_validator_account_email_taken'))
-                    }
-                    InputProps={{ style: { backgroundColor: 'white' } }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
                     id="password"
                     label={t('xml_validator_account_new_password')}
                     variant="outlined"
@@ -278,7 +247,7 @@ function UserAdministration() {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={loading || passwordError || emailError || usernameError || usernameTaken || emailTaken}
+                    disabled={loading || passwordError || usernameError || usernameTaken}
                   >
                     {loading ? t('xml_validator_account_Saving...') : t('xml_validator_account_Save')}
                   </Button>
